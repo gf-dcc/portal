@@ -1,0 +1,18 @@
+[
+    {
+        "id": 9999,
+        "slug": "example-atlas",
+        "title": { "rendered": "EXAMPLE ATLAS" },
+        "content": { "rendered": "" },
+        "atlas_overview": "",
+        "data_overview": "",
+        "publications": "",
+        "lead_institutions": "Harvard University",
+        "atlas_type": "Other",
+        "synapse_id": "",
+        "gf_id": "",
+        "primary_ngs": "",
+        "short_description": "Collaborative stuff",
+        "home_image": { "guid": "" }
+    }
+]

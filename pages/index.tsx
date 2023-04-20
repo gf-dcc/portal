@@ -27,11 +27,11 @@ const Home = (data: IHomePropsProps) => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-    const data = await getStaticContent([WPConstants.HOMEPAGE_HERO_BLURB]);
+    // const data = await getStaticContent([WPConstants.HOMEPAGE_HERO_BLURB]);
 
-    const homepageContent = data.find(
-        (d: any) => d.slug === WPConstants.HOMEPAGE_HERO_BLURB
-    );
+    //const homepageContent = data.find(
+    //    (d: any) => d.slug === WPConstants.HOMEPAGE_HERO_BLURB
+    //);
 
     const atlases = await getAtlasList();
 
@@ -51,13 +51,14 @@ export const getStaticProps: GetStaticProps = async (context) => {
             )
         )
         .toString();
+
     const files = fillInEntities(
         (JSON.parse(processedSynapseData) as any) as LoadDataResult
     );
 
     return {
         props: {
-            hero_blurb: homepageContent.content.rendered,
+            hero_blurb: "",
             cards: cards,
             atlases,
             synapseCounts: computeDashboardData(files),

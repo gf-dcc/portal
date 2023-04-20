@@ -1,5 +1,5 @@
 {
-  "name": "htan-portal-nextjs",
+  "name": "gray-foundation-portal-nextjs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,12 +8,8 @@
     "build": "yarn run gunzip && export NODE_OPTIONS=--max_old_space_size=6144 && next build",
     "start": "yarn run gunzip && next start",
     "processSynapseJSON": "npx ncc run data/processSynapseJSON.ts",
-    "prettierPreCommit": "STAGED_AND_CHANGED_FILES=$(git diff HEAD --name-only --cached --diff-filter=d) && ([ -z \"$STAGED_AND_CHANGED_FILES\" ] && echo \"Nothing to prettify\" || (yarn run prettier --write $(echo $STAGED_AND_CHANGED_FILES) && git add -f $(echo $STAGED_AND_CHANGED_FILES)))",
     "prettierAll": "yarn run prettier --write $(git ls-files | grep '\\(.js\\|.ts\\|.scss\\|.css\\)')"
   },
-  "pre-commit": [
-    "prettierPreCommit"
-  ],
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
@@ -40,7 +36,7 @@
     "mobx-utils": "^5.6.2",
     "next": "12.1",
     "node-fetch": "^2.6.0",
-    "node-sass": "6.0.1",
+    "node-sass": "^8.0.0",
     "pluralize": "^8.0.0",
     "popper.js": "^1.16.1",
     "prettier": "^2.1.2",

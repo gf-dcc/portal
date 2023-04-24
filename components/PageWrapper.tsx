@@ -1,11 +1,11 @@
 import * as React from 'react';
-import HtanNavbar from './HtanNavbar';
+import PortalNavbar from './PortalNavbar';
 import Footer from './Footer';
 
 const PageWrapper = (props: any) => {
     return (
         <div id={'pageWrapper'}>
-            <HtanNavbar />
+            <PortalNavbar />
             {props.children}
             <Footer />
         </div>

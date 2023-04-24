@@ -2,7 +2,7 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
-import HtanNavbar from '../components/HtanNavbar';
+import PortalNavbar from '../components/PortalNavbar';
 import PreReleaseBanner from '../components/PreReleaseBanner';
 import Footer from '../components/Footer';
 import Link from 'next/link';

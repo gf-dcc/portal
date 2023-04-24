@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import DataTable from 'react-data-table-component';
 
-import HtanNavbar from './HtanNavbar';
+import PortalNavbar from './PortalNavbar';
 import Footer from './Footer';
 import { CmsData, WPAtlas } from '../types';
 import { getAtlasPageURL } from '../lib/helpers';

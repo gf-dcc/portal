@@ -1,5 +1,5 @@
 import { NextRouter, useRouter } from 'next/router';
-import HtanNavbar from '../../components/HtanNavbar';
+import PortalNavbar from '../../components/PortalNavbar';
 import Footer from '../../components/Footer';
 import getData from '../../lib/getData';
 import { getAtlasList } from '../../ApiUtil';
@@ -155,7 +155,7 @@ const Post: React.FunctionComponent<IPostProps> = ({
             <Head>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
             </Head>
-            <HtanNavbar />
+            <PortalNavbar />
             <div id={'iframe-wrapper'}></div>
             {postData && synapseAtlas === undefined && (
                 <div className={'alert alert-danger'}>

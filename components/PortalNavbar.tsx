@@ -20,7 +20,7 @@ function togglePreview(on: any) {
     }
 }
 
-const HtanNavbar = () => (
+const PortalNavbar = () => (
     <Navbar bg="nav-purple" variant="dark" expand="lg" className={'main-nav'}>
         <Navbar.Brand href="/">
             <img
@@ -49,4 +49,4 @@ const HtanNavbar = () => (
     </Navbar>
 );
 
-export default HtanNavbar;
+export default PortalNavbar;

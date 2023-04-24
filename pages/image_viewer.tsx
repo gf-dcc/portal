@@ -7,7 +7,7 @@ import {
 } from '../components/DataReleasePage';
 import { getAtlasList, WORDPRESS_BASE_URL } from '../ApiUtil';
 import { GetStaticProps } from 'next';
-import HtanNavbar from '../components/HtanNavbar';
+import PortalNavbar from '../components/PortalNavbar';
 import Footer from '../components/Footer';
 import PageWrapper from '../components/PageWrapper';
 

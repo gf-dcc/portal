@@ -1,6 +1,8 @@
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons';
 
 function togglePreview(on: any) {
     if (process.browser) {
@@ -32,6 +34,9 @@ const HtanNavbar = () => (
             <Nav className="mr-auto">
                 <Nav.Link href="/explore">Explore</Nav.Link>
                 <Nav.Link href="/teams">Research Teams</Nav.Link>
+                <Nav.Link href="https://docs.graybrcaatlas.org/" target="_blank">
+                    Documentation <FontAwesomeIcon icon={faExternalLinkAlt} />
+                </Nav.Link>
             </Nav>
         </Navbar.Collapse>
         <Nav>

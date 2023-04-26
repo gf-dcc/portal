@@ -54,10 +54,9 @@ const HomePage: React.FunctionComponent<IHomePropsProps> = ({
                         <h1>The Gray PreCancer BRCA Atlas</h1>
                         <br />
                         <span>
-                            Launched in September of 2020, the BRCA PreCancer
-                            Atlas is a Gray Foundation-funded initiative through
-                            which a collaborative network of research centers
-                            and a central Data Coordinating Center is
+                            The BRCA PreCancer Atlas is a Gray Foundation-funded initiative
+                            through which a collaborative network of research centers
+                            and a central Data Coordinating Center (DCC) is
                             constructing a BRCA PreCancer Atlas.
                         </span>
                         <br />

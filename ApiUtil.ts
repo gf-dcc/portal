@@ -1,4 +1,6 @@
 import useSWR from 'swr';
+import { promises as fs } from 'fs';
+import path from 'path';
 import _ from 'lodash';
 import fetch from 'node-fetch';
 import { WPAtlas } from './types';
@@ -20,16 +22,19 @@ export function getAtlasContent(postId: number): WPAtlas {
     return data as WPAtlas;
 }
 
-export function getAtlasList(): Promise<WPAtlas[]> {
-    let postUrl = `https://humantumoratlas.org/wp-json/wp/v2/atlas?per_page=100`;
-    return fetcher(postUrl);
+// Getting Atlases stored as static content
+export async function getAtlasList(): Promise<WPAtlas[]> {
+
+    const dir = path.join(process.cwd(), '/data');
+    const res = await fs.readFile(dir + `/atlases.json`);
+    return res.toJSON();
 }
 
 export async function getStaticContent(slugs: string[]) {
-    const overviewURL = `${WORDPRESS_BASE_URL}${JSON.stringify(slugs)}`;
-    const res = await fetch(overviewURL);
-
-    return res.json();
+    
+    const res = { content: { rendered: '' } };
+    return res;
 }
 
-export const WORDPRESS_BASE_URL = `https://humantumoratlas.org/wp-json/wp/v2/pages/?_fields=content,slug,title&cacheBuster=${new Date().getTime()}&slug=`;
+export const WORDPRESS_BASE_URL = `https://humantumoratlas.wpcomstaging.com/wp-json/wp/v2/pages/?_fields=content,slug,title&cacheBuster=${new Date().getTime()}&slug=`;
+

@@ -6,7 +6,7 @@ import {
 } from '../components/DataReleasePage';
 import { getAtlasList, getStaticContent } from '../ApiUtil';
 import { GetStaticProps } from 'next';
-import HtanNavbar from '../components/HtanNavbar';
+import PortalNavbar from '../components/PortalNavbar';
 import Footer from '../components/Footer';
 import PageWrapper from '../components/PageWrapper';
 

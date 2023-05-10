@@ -7,7 +7,7 @@ import { DataSchemaData } from '../lib/dataSchemaHelpers';
 import { CmsData } from '../types';
 import DataSchema from './DataSchema';
 import Footer from './Footer';
-import HtanNavbar from './HtanNavbar';
+import PortalNavbar from './PortalNavbar';
 
 export interface DataStandardProps {
     title: string;
@@ -19,7 +19,7 @@ export interface DataStandardProps {
 const DataStandard: React.FunctionComponent<DataStandardProps> = (props) => {
     return (
         <>
-            <HtanNavbar />
+            <PortalNavbar />
             <Container>
                 <Row>
                     <Breadcrumb>

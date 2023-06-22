@@ -25,26 +25,26 @@ if (typeof window !== 'undefined') {
     win = {} as any;
 }
 
-export type HTANDataFileID = string;
-export type HTANBiospecimenID = string;
-export type HTANParticipantID = string;
+export type DataFileID = string;
+export type BiospecimenID = string;
+export type ParticipantID = string;
 
 export interface BaseSerializableEntity {
     // Synapse attribute names
     AJCCPathologicStage: string;
     Biospecimen: string;
     Component: string;
-    HTANParentID: string;
-    HTANBiospecimenID: string;
-    HTANDataFileID: HTANDataFileID; // this is used as the stable UID
-    HTANParentBiospecimenID: string;
+    ParentID: string;
+    BiospecimenID: string;
+    DataFileID: DataFileID; // this is used as the stable UID
+    ParentBiospecimenID: string;
     HTANParentDataFileID: string;
     TissueorOrganofOrigin: string;
     PrimaryDiagnosis: string;
     AgeatDiagnosis: number;
     fileFormat: string;
     filename: string;
-    HTANParticipantID: string;
+    ParticipantID: string;
     ImagingAssayType?: string;
     AssayType?: string;
     Race: string;
@@ -58,14 +58,14 @@ export interface BaseSerializableEntity {
     level: string;
     assayName?: string;
     WPAtlas: WPAtlas;
-    primaryParents?: HTANDataFileID[];
+    primaryParents?: DataFileID[];
     synapseId?: string;
 }
 
 export interface SerializableEntity extends BaseSerializableEntity {
-    biospecimenIds: HTANBiospecimenID[];
-    diagnosisIds: HTANParticipantID[];
-    demographicsIds: HTANParticipantID[];
+    biospecimenIds: BiospecimenID[];
+    diagnosisIds: ParticipantID[];
+    demographicsIds: ParticipantID[];
 }
 
 // Entity links in some referenced objects, which will help
@@ -88,14 +88,14 @@ export type Atlas = {
 export interface LoadDataResult {
     files: SerializableEntity[];
     atlases: Atlas[];
-    biospecimenByHTANBiospecimenID: {
-        [HTANBiospecimenID: string]: SerializableEntity;
+    biospecimenByBiospecimenID: {
+        [BiospecimenID: string]: SerializableEntity;
     };
-    diagnosisByHTANParticipantID: {
-        [HTANParticipantID: string]: SerializableEntity;
+    diagnosisByParticipantID: {
+        [ParticipantID: string]: SerializableEntity;
     };
-    demographicsByHTANParticipantID: {
-        [HTANParticipantID: string]: SerializableEntity;
+    demographicsByParticipantID: {
+        [ParticipantID: string]: SerializableEntity;
     };
 }
 
@@ -114,11 +114,11 @@ export function doesFileIncludeLevel1OrLevel2SequencingData(file: Entity) {
 
 function mergeCaseData(
     diagnosis: Entity[],
-    demographicsByHTANParticipantID: { [htanParticipantID: string]: Entity }
+    demographicsByParticipantID: { [htanParticipantID: string]: Entity }
 ) {
     return diagnosis.map((d) => ({
         ...d,
-        ...demographicsByHTANParticipantID[d.HTANParticipantID],
+        ...demographicsByParticipantID[d.ParticipantID],
     }));
 }
 
@@ -136,18 +136,18 @@ export async function fetchData(): Promise<LoadDataResult> {
 }
 
 export function fillInEntities(data: LoadDataResult): Entity[] {
-    const biospecimenMap = data.biospecimenByHTANBiospecimenID;
-    const diagnosisMap = data.diagnosisByHTANParticipantID;
-    const demoMap = data.demographicsByHTANParticipantID;
+    const biospecimenMap = data.biospecimenByBiospecimenID;
+    const diagnosisMap = data.diagnosisByParticipantID;
+    const demoMap = data.demographicsByParticipantID;
 
-    // give each biospecimen it's caseid (i.e "diagnosis" HTANParticipantID)
-    // biospecimen have HTANParentID but that may or may not be it's caseid because
+    // give each biospecimen it's caseid (i.e "diagnosis" ParticipantID)
+    // biospecimen have ParentID but that may or may not be it's caseid because
     // biospecimen can have other biospecimen as parents (one case at top)
-    _.forEach(data.biospecimenByHTANBiospecimenID, (specimen) => {
-        const parentIdMatch = specimen.HTANParentID.match(/[^_]*_[^_]*/);
+    _.forEach(data.biospecimenByBiospecimenID, (specimen) => {
+        const parentIdMatch = specimen.ParentID.match(/[^_]*_[^_]*/);
         // we should always have a match
-        specimen.HTANParticipantID =
-            specimen.HTANParticipantID ||
+        specimen.ParticipantID =
+            specimen.ParticipantID ||
             (parentIdMatch ? parentIdMatch[0] : '');
     });
 
@@ -166,7 +166,7 @@ export function fillInEntities(data: LoadDataResult): Entity[] {
                 (file as Entity).diagnosis,
                 demoMap as { [id: string]: Entity }
             ),
-            (c) => c.HTANParticipantID
+            (c) => c.ParticipantID
         );
     });
 
@@ -297,10 +297,10 @@ export function computeDashboardData(files: Entity[]): EntityReport[] {
             uniqueAtlases.add(file.atlasid);
         }
         for (const biospec of file.biospecimen) {
-            uniqueBiospecs.add(biospec.HTANBiospecimenID);
+            uniqueBiospecs.add(biospec.BiospecimenID);
         }
         for (const diag of file.diagnosis) {
-            uniqueCases.add(diag.HTANParticipantID);
+            uniqueCases.add(diag.ParticipantID);
             uniqueOrgans.add(diag.TissueorOrganofOrigin);
         }
     }

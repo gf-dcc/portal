@@ -175,7 +175,7 @@ export function getFilteredCases(
 ) {
     const cases = _.chain(filteredFiles)
         .flatMapDeep((f: Entity) => f.cases)
-        .uniqBy((f) => f.HTANParticipantID)
+        .uniqBy((f) => f.ParticipantID)
         .value();
 
     if (showAllCases) {
@@ -197,7 +197,7 @@ export function getFilteredSamples(
 ) {
     const samples = _.chain(filteredFiles)
         .flatMapDeep((file) => file.biospecimen)
-        .uniqBy((f) => f.HTANBiospecimenID)
+        .uniqBy((f) => f.BiospecimenID)
         .value();
 
     if (showAllSamples) {
@@ -205,10 +205,10 @@ export function getFilteredSamples(
     } else {
         const filteredCaseIds = _.keyBy(
             filteredCases,
-            (c) => c.HTANParticipantID
+            (c) => c.ParticipantID
         );
         return samples.filter((s) => {
-            return s.HTANParticipantID in filteredCaseIds;
+            return s.ParticipantID in filteredCaseIds;
         });
     }
 }

@@ -22,7 +22,7 @@ export const CaseTable: React.FunctionComponent<ICaseTableProps> = (props) => {
         props.schemaDataById,
         // need to add a custom sort function for the id
         {
-            HTANParticipantID: {
+            ParticipantID: {
                 sortFunction: sortByHtanParticipantId,
             },
             AgeatDiagnosis: {
@@ -56,7 +56,7 @@ export const CaseTable: React.FunctionComponent<ICaseTableProps> = (props) => {
     return (
         <EnhancedDataTable
             columns={columns}
-            defaultSortField={'HTANParticipantID'}
+            defaultSortField={'ParticipantID'}
             data={props.cases}
             striped={true}
             dense={false}

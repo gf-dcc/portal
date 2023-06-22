@@ -339,12 +339,12 @@ export default class FileTable extends React.Component<IFileTableProps> {
                 name: 'Biospecimen',
                 selector: (file: Entity) => {
                     return _.uniq(
-                        file.biospecimen.map((b) => b.HTANBiospecimenID)
+                        file.biospecimen.map((b) => b.BiospecimenID)
                     ).join(', ');
                 },
                 cell: (file: Entity) => {
                     const uniqueBiospecimens = _.uniq(
-                        file.biospecimen.map((b) => b.HTANBiospecimenID)
+                        file.biospecimen.map((b) => b.BiospecimenID)
                     );
                     if (uniqueBiospecimens.length === 0) {
                         return '0 Biospecimens';
@@ -782,7 +782,7 @@ export default class FileTable extends React.Component<IFileTableProps> {
                         tUpperCase: string
                     ) => {
                         return _.some(e.diagnosis, (d) =>
-                            d.HTANParticipantID.toUpperCase().includes(
+                            d.ParticipantID.toUpperCase().includes(
                                 tUpperCase
                             )
                         );

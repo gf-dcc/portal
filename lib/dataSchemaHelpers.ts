@@ -173,7 +173,7 @@ export const DEFAULT_SCHEMA: SchemaJson = {
 };
 
 export const DEFAULT_SCHEMA_URL =
-    'https://raw.githubusercontent.com/ncihtan/schematic/main/data/schema_org_schemas/HTAN.jsonld';
+    'https://raw.githubusercontent.com/gf-dcc/data-model/main/GF.jsonld';
 
 const schemaDataCache: { [uri: string]: SchemaJson } = {};
 

@@ -7,7 +7,7 @@ import zlib from 'zlib';
 import PreReleaseBanner from '../components/PreReleaseBanner';
 import HomePage, { IHomePropsProps } from '../components/HomePage';
 import { GetStaticProps } from 'next';
-import { getAtlasList, getContent } from '../ApiUtil';
+import { getContent } from '../ApiUtil';
 import PageWrapper from '../components/PageWrapper';
 import {
     computeDashboardData,

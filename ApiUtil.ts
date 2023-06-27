@@ -3,7 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import _ from 'lodash';
 import fetch from 'node-fetch';
-import { WPAtlas } from './types';
+import { Atlas } from './lib/helpers';
 
 export function fetcher(url: string) {
     return fetch(url).then((r) => r.json());
@@ -16,18 +16,18 @@ export async function getContent(tab: string, htaId: string) {
     return post[0] ? post[0].content.rendered : '';
 }
 
-export function getAtlasContent(postId: number): WPAtlas {
+export function getAtlasContent(postId: number): Atlas {
     let postUrl = `https://humantumoratlas.org/wp-json/wp/v2/atlas/${postId}`;
     let { data } = useSWR(postUrl, fetcher);
-    return data as WPAtlas;
+    return data as Atlas;
 }
 
 // Getting Atlases stored as static content
-export async function getAtlasList(): Promise<WPAtlas[]> {
+export async function getAtlasList(): Promise<Atlas[]> {
 
-    const dir = path.join(process.cwd(), '/data');
-    const res = await fs.readFile(dir + `/atlases.json`);
-    return res.toJSON();
+    const dir = path.join(process.cwd(), '/public');
+    const res = (await fs.readFile(dir + `/processed_synapse_data.json`));
+    return res as Atlas[];
 }
 
 export async function getStaticContent(slugs: string[]) {

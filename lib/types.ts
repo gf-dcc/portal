@@ -1,5 +1,5 @@
 import { DataSchemaData } from './dataSchemaHelpers';
-import { Atlas, Entity } from './helpers';
+import { Atlas, AtlasDataset, Entity } from './helpers';
 import { ActionMeta, ActionTypes, OptionTypeBase } from 'react-select';
 import _ from 'lodash';
 
@@ -119,6 +119,7 @@ export interface IFilterProps {
     filters: { [key: string]: string[] };
     schemaDataById?: { [schemaDataId: string]: DataSchemaData };
     atlases: Atlas[];
+    atlasDatasets: AtlasDataset[];
     atlasData?: any;
 }
 
@@ -145,8 +146,8 @@ export type SynapseData = {
 };
 
 export type SynapseAtlas = {
-    htan_id: string;
-    htan_name: string;
+    team_id: string;
+    team_name: string;
 } & {
     [data_schema: string]: SynapseRecords;
 };

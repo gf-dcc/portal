@@ -4,7 +4,6 @@ import fetch from 'node-fetch';
 import * as Path from 'path';
 import { toArabic } from 'roman-numerals';
 
-import { WPAtlas } from '../types';
 import {
     ExploreOptionType,
     ExploreSelectedFilter,
@@ -53,11 +52,10 @@ export interface BaseSerializableEntity {
     Gender: string;
 
     // Derived or attached in frontend
-    atlasid: string;
+    atlas_id: string;
     atlas_name: string;
     level: string;
     assayName?: string;
-    WPAtlas: WPAtlas;
     primaryParents?: DataFileID[];
     synapseId?: string;
 }
@@ -78,16 +76,30 @@ export interface Entity extends SerializableEntity {
 }
 
 export type Atlas = {
-    htan_id: string;
-    htan_name: string;
+    atlas_id: string;
+    atlas_name: string;
+    atlas_description: string;
+    team_id: string;
+    team_name: string;
+    num_datasets: number;
+    num_cases: number;
+    num_biospecimens: number
+};
+
+export type AtlasDataset = {
+    team_id: string;
+    team_name: string;
     num_cases: number;
     num_biospecimens: number;
-    WPAtlas: WPAtlas;
+    dataset_name: string;
+    dataset_id: string;
+    atlas_id: string;
 };
 
 export interface LoadDataResult {
     files: SerializableEntity[];
-    atlases: Atlas[];
+    atlases: Atlas[],
+    atlasDatasets: AtlasDataset[];
     biospecimenByBiospecimenID: {
         [BiospecimenID: string]: SerializableEntity;
     };
@@ -282,33 +294,17 @@ export function setTab(tab: string, router: NextRouter) {
     );
 }
 
-export type EntityReport = {
+export type AtlasReport = {
     description: string;
     text: string;
 };
 
-export function computeDashboardData(files: Entity[]): EntityReport[] {
-    const uniqueAtlases = new Set();
-    const uniqueOrgans = new Set();
-    const uniqueBiospecs = new Set();
-    const uniqueCases = new Set();
-    for (const file of files) {
-        if (file.atlasid) {
-            uniqueAtlases.add(file.atlasid);
-        }
-        for (const biospec of file.biospecimen) {
-            uniqueBiospecs.add(biospec.BiospecimenID);
-        }
-        for (const diag of file.diagnosis) {
-            uniqueCases.add(diag.ParticipantID);
-            uniqueOrgans.add(diag.TissueorOrganofOrigin);
-        }
-    }
+export function computeDashboardData(atlases: Atlas[]): AtlasReport[] {
     return [
-        { description: 'Atlases', text: uniqueAtlases.size.toString() },
-        { description: 'Organs', text: uniqueOrgans.size.toString() },
-        { description: 'Cases', text: uniqueCases.size.toString() },
-        { description: 'Biospecimens', text: uniqueBiospecs.size.toString() },
+        { description: 'Atlases', text: atlases.length.toString() },
+        { description: 'Datasets', text: atlases.map(a => a.num_datasets).reduce((a, b) => a + b, 0).toString() },
+        { description: 'Cases', text: atlases.map(a => a.num_cases).reduce((a, b) => a + b, 0).toString() },
+        { description: 'Biospecimens', text: atlases.map(a => a.num_biospecimens).reduce((a, b) => a + b, 0).toString() },
     ];
 }
 

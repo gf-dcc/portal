@@ -18,7 +18,7 @@ import { AttributeNames, SynapseAtlas } from '../../lib/types';
 import { ExploreTab } from '../../components/ExploreTabs';
 
 interface IPostProps {
-    synapseAtlasData: Pick<SynapseAtlas, 'htan_id' | 'htan_name'>[];
+    synapseAtlasData: Pick<SynapseAtlas, 'team_id' | 'team_name'>[];
     WPAtlasData: WPAtlas[];
     router: NextRouter;
 }
@@ -134,14 +134,14 @@ const Post: React.FunctionComponent<IPostProps> = ({
     synapseAtlasData,
 }) => {
     const router = useRouter();
-    const htan_id = router.query.id as string;
+    const team_id = router.query.id as string;
 
     const postData = WPAtlasData.find((a) => {
-        return a.htan_id === htan_id;
+        return a.team_id === team_id;
     });
 
     const synapseAtlas = synapseAtlasData.find((a) => {
-        return a.htan_id === htan_id;
+        return a.team_id === team_id;
     });
 
     const content = postData ? (
@@ -174,8 +174,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
     const WPAtlasData = await getAtlasList();
     const rawSynapseAtlasData = getData().atlases;
     const synapseAtlasData = rawSynapseAtlasData.map((atlas) => ({
-        htan_id: atlas.htan_id,
-        htan_name: atlas.htan_name,
+        team_id: atlas.team_id,
+        team_name: atlas.team_name,
     }));
 
     return {
@@ -189,7 +189,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 export async function getStaticPaths() {
     const atlases = await getAtlasList();
 
-    const paths = atlases.map((a) => `/atlas/${a.htan_id}`);
+    const paths = atlases.map((a) => `/atlas/${a.team_id}`);
 
     return { paths, fallback: false };
 }

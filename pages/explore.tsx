@@ -8,13 +8,11 @@ import {
 } from 'mobx';
 import { observer } from 'mobx-react';
 import { fromPromise, IPromiseBasedObservable } from 'mobx-utils';
-import { GetStaticProps } from 'next';
 import { withRouter, NextRouter } from 'next/router';
 import fetch from 'node-fetch';
 import React from 'react';
 import { ScaleLoader } from 'react-spinners';
 
-import { getAtlasList, WORDPRESS_BASE_URL } from '../ApiUtil';
 import {
     filterFiles,
     getFilteredCases,
@@ -22,7 +20,7 @@ import {
     groupFilesByAttrNameAndValue,
 } from '../lib/filterHelpers';
 import {
-    Atlas,
+    AtlasDataset,
     Entity,
     fetchData,
     fillInEntities,
@@ -40,7 +38,7 @@ import {
     IFilterProps,
     ISelectedFiltersByAttrName,
 } from '../lib/types';
-import { WPAtlas } from '../types';
+
 import PreReleaseBanner from '../components/PreReleaseBanner';
 import FilterControls from '../components/filter/FilterControls';
 import Filter from '../components/filter/Filter';
@@ -51,30 +49,13 @@ import { ExploreSummary } from '../components/ExploreSummary';
 import PageWrapper from '../components/PageWrapper';
 import { DataSchemaData, getSchemaDataMap } from '../lib/dataSchemaHelpers';
 
-export const getStaticProps: GetStaticProps = async (context) => {
-    //let slugs = ['summary-blurb-data-release'];
-    //let overviewURL = `${WORDPRESS_BASE_URL}${JSON.stringify(slugs)}`;
-    //let res = await fetch(overviewURL);
-
-    const wpAtlases = await getAtlasList();
-
-    return {
-        props: {
-            wpAtlases,
-        },
-    };
-};
-
 export type ExploreURLQuery = {
     selectedFilters: string | undefined;
     tab: ExploreTab;
 };
 
 @observer
-class Search extends React.Component<
-    { router: NextRouter; wpAtlases: WPAtlas[] },
-    IFilterProps
-> {
+class Search extends React.Component<{ router: NextRouter }, IFilterProps> {
     @observable.ref private dataLoadingPromise:
         | IPromiseBasedObservable<LoadDataResult>
         | undefined;
@@ -88,6 +69,7 @@ class Search extends React.Component<
             files: [],
             filters: {},
             atlases: [],
+            atlasDatasets: [],
             schemaDataById: {},
         };
 
@@ -169,7 +151,7 @@ class Search extends React.Component<
     }
 
     @action.bound
-    onSelectAtlas(selected: Atlas[]) {
+    onSelectAtlas(selected: AtlasDataset[]) {
         const group = AttributeNames.AtlasName;
 
         // remove all previous atlas filters
@@ -178,7 +160,7 @@ class Search extends React.Component<
 
         // add the new ones
         newFilters.push(
-            ...selected.map((a) => ({ group, value: a.htan_name }))
+            ...selected.map((a) => ({ group, value: a.team_name }))
         );
 
         updateSelectedFiltersInURL(newFilters, this.props.router);
@@ -190,7 +172,7 @@ class Search extends React.Component<
             this.dataLoadingPromise.then((data) => {
                 this.setState({
                     files: fillInEntities(data),
-                    atlases: data.atlases,
+                    atlases: data.atlasDatasets,
                 });
             });
 
@@ -255,14 +237,14 @@ class Search extends React.Component<
     }
 
     @computed get atlasMap() {
-        return _.keyBy(this.state.atlases, (a) => a.htan_id);
+        return _.keyBy(this.state.atlases, (a) => a.team_id);
     }
 
     @computed
     get filteredAtlases() {
         // get only atlases associated with filtered files
         return _.chain(this.filteredFiles)
-            .map((f) => f.atlasid)
+            .map((f) => f.atlas_id)
             .uniq()
             .map((id) => this.atlasMap[id])
             .value();
@@ -281,7 +263,7 @@ class Search extends React.Component<
                     this.state.files
                 )
             )
-                .map((f) => f.atlasid)
+                .map((f) => f.atlas_id)
                 .uniq()
                 .map((id) => this.atlasMap[id])
                 .value();
@@ -302,7 +284,7 @@ class Search extends React.Component<
             .nonAtlasSelectedFiltersByAttrName;
 
         return _.chain(filterFiles(filtersExceptAtlasFilters, this.state.files))
-            .map((f) => f.atlasid)
+            .map((f) => f.atlas_id)
             .uniq()
             .map((id) => this.atlasMap[id])
             .value();
@@ -311,7 +293,7 @@ class Search extends React.Component<
     @computed
     get allAtlases() {
         return _.chain(this.state.files)
-            .map((f) => f.atlasid)
+            .map((f) => f.atlas_id)
             .uniq()
             .map((id) => this.atlasMap[id])
             .value();
@@ -380,7 +362,6 @@ class Search extends React.Component<
                         nonAtlasSelectedFiltersByAttrName={
                             this.nonAtlasSelectedFiltersByAttrName
                         }
-                        wpData={this.props.wpAtlases}
                         getGroupsByPropertyFiltered={
                             this.getGroupsByPropertyFiltered
                         }
@@ -398,7 +379,6 @@ class Search extends React.Component<
 }
 
 interface IFilterPageProps {
-    wpAtlases: WPAtlas[];
     router: NextRouter;
 }
 
@@ -406,7 +386,7 @@ const FilterPage = (props: IFilterPageProps) => {
     return (
         <>
             <PageWrapper>
-                <Search router={props.router} wpAtlases={props.wpAtlases} />
+                <Search router={props.router} />
             </PageWrapper>
         </>
     );

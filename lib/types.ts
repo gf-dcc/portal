@@ -118,7 +118,6 @@ export interface IFilterProps {
     files: Entity[];
     filters: { [key: string]: string[] };
     schemaDataById?: { [schemaDataId: string]: DataSchemaData };
-    atlases: Atlas[];
     atlasDatasets: AtlasDataset[];
     atlasData?: any;
 }

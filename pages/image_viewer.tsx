@@ -1,11 +1,6 @@
 import fetch from 'node-fetch';
 import React from 'react';
 
-import {
-    DataReleasePage,
-    DataReleaseProps,
-} from '../components/DataReleasePage';
-import { getAtlasList, WORDPRESS_BASE_URL } from '../ApiUtil';
 import { GetStaticProps } from 'next';
 import PortalNavbar from '../components/PortalNavbar';
 import Footer from '../components/Footer';

@@ -7,7 +7,6 @@ import zlib from 'zlib';
 import PreReleaseBanner from '../components/PreReleaseBanner';
 import HomePage, { IHomePropsProps } from '../components/HomePage';
 import { GetStaticProps } from 'next';
-import { getContent } from '../ApiUtil';
 import PageWrapper from '../components/PageWrapper';
 import {
     computeDashboardData,
@@ -26,15 +25,6 @@ const Home = (data: IHomePropsProps) => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
 
-    const cards = await Promise.all([
-        getContent('card-1', 'homepage'),
-        getContent('card-2', 'homepage'),
-        getContent('card-3', 'homepage'),
-        getContent('card-4', 'homepage'),
-        getContent('card-5', 'homepage'),
-        getContent('card-6', 'homepage'),
-    ]);
-
     const processedSynapseData = await zlib
         .gunzipSync(
             await fs.readFileSync(
@@ -48,7 +38,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
     return {
         props: {
             hero_blurb: "",
-            cards: cards,
             atlases,
             synapseCounts: computeDashboardData(atlases),
         },

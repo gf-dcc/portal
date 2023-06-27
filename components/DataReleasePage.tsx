@@ -18,7 +18,7 @@ export interface DataReleaseProps {
 
 export const DataReleasePage = (props: DataReleaseProps) => {
     const atlases = _.keyBy(props.atlasData, (atl) =>
-        atl.htan_id.toUpperCase()
+        atl.team_id.toUpperCase()
     );
     const columns = [
         {
@@ -62,7 +62,7 @@ export const DataReleasePage = (props: DataReleaseProps) => {
             atlasName: atlas.title.rendered,
             atlasType: atlas.atlas_type,
             leadInstitutions: atlas.lead_institutions,
-            dataRelease: atlas.htan_id,
+            dataRelease: atlas.team_id,
             synapseId: atlas.synapse_id,
         });
         return agg;

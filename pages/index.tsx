@@ -7,13 +7,10 @@ import zlib from 'zlib';
 import PreReleaseBanner from '../components/PreReleaseBanner';
 import HomePage, { IHomePropsProps } from '../components/HomePage';
 import { GetStaticProps } from 'next';
-import { WPConstants } from '../types';
-import { getAtlasList, getContent, getStaticContent } from '../ApiUtil';
 import PageWrapper from '../components/PageWrapper';
 import {
     computeDashboardData,
-    fillInEntities,
-    LoadDataResult,
+    Atlas
 } from '../lib/helpers';
 
 const Home = (data: IHomePropsProps) => {
@@ -27,22 +24,6 @@ const Home = (data: IHomePropsProps) => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-    // const data = await getStaticContent([WPConstants.HOMEPAGE_HERO_BLURB]);
-
-    //const homepageContent = data.find(
-    //    (d: any) => d.slug === WPConstants.HOMEPAGE_HERO_BLURB
-    //);
-
-    const atlases = await getAtlasList();
-
-    const cards = await Promise.all([
-        getContent('card-1', 'homepage'),
-        getContent('card-2', 'homepage'),
-        getContent('card-3', 'homepage'),
-        getContent('card-4', 'homepage'),
-        getContent('card-5', 'homepage'),
-        getContent('card-6', 'homepage'),
-    ]);
 
     const processedSynapseData = await zlib
         .gunzipSync(
@@ -52,16 +33,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
         )
         .toString();
 
-    const files = fillInEntities(
-        (JSON.parse(processedSynapseData) as any) as LoadDataResult
-    );
+    const atlases =  (JSON.parse(processedSynapseData)).atlases as Atlas[]
 
     return {
         props: {
             hero_blurb: "",
-            cards: cards,
             atlases,
-            synapseCounts: computeDashboardData(files),
+            synapseCounts: computeDashboardData(atlases),
         },
     };
 };

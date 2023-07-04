@@ -1,28 +1,11 @@
 import React from 'react';
-
-import {
-    DataReleasePage,
-    DataReleaseProps,
-} from '../components/DataReleasePage';
-import { getAtlasList, getStaticContent } from '../ApiUtil';
 import { GetStaticProps } from 'next';
 import PortalNavbar from '../components/PortalNavbar';
 import Footer from '../components/Footer';
 import PageWrapper from '../components/PageWrapper';
 
-export const getStaticProps: GetStaticProps = async (context) => {
-    const data = await getStaticContent(['summary-blurb-data-release']);
-    const atlases = await getAtlasList();
 
-    return {
-        props: {
-            atlasData: atlases,
-            data,
-        },
-    };
-};
-
-function SingleCell(props: DataReleaseProps) {
+function SingleCell(props: any) {
     return (
         <>
             <PageWrapper>

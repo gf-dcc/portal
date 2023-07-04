@@ -2,12 +2,11 @@ import { observer } from 'mobx-react';
 import { NextRouter } from 'next/router';
 import React from 'react';
 
-import { Atlas, Entity, setTab } from '../lib/helpers';
-import { WPAtlas } from '../types';
+import { AtlasDataset, Entity, setTab } from '../lib/helpers';
 import BiospecimenTable from './BiospecimenTable';
 import CaseTable from './CaseTable';
 import FileTable from './FileTable';
-import WPAtlasTable from './WPAtlasTable';
+import AtlasTable from './AtlasTable';
 import { DataSchemaData } from '../lib/dataSchemaHelpers';
 import {
     ExploreSelectedFilter,
@@ -22,14 +21,14 @@ interface IExploreTabsProps {
     cases: Entity[];
     filteredCasesByNonAtlasFilters: Entity[];
     filteredSamplesByNonAtlasFilters: Entity[];
-    wpData: WPAtlas[];
+    //AtlasDataset: AtlasDataset[];
     schemaDataById?: { [schemaDataId: string]: DataSchemaData };
     getGroupsByPropertyFiltered: any;
-    filteredSynapseAtlases: Atlas[];
-    filteredSynapseAtlasesByNonAtlasFilters: Atlas[];
-    selectedSynapseAtlases: Atlas[];
-    allSynapseAtlases: Atlas[];
-    onSelectAtlas?: (selected: Atlas[]) => void;
+    filteredSynapseAtlases: AtlasDataset[];
+    filteredSynapseAtlasesByNonAtlasFilters: AtlasDataset[];
+    selectedSynapseAtlases: AtlasDataset[];
+    allSynapseAtlases: AtlasDataset[];
+    onSelectAtlas?: (selected: AtlasDataset[]) => void;
 
     toggleShowAllBiospecimens: () => void;
     showAllBiospecimens: boolean;
@@ -39,14 +38,14 @@ interface IExploreTabsProps {
 
 export enum ExploreTab {
     FILE = 'file',
-    ATLAS = 'atlas',
+    ATLASDATASET = 'atlas',
     BIOSPECIMEN = 'biospecimen',
     CASES = 'cases',
 }
 
 const ExploreTabs: React.FunctionComponent<IExploreTabsProps> = observer(
     (props) => {
-        const activeTab = props.router.query.tab || ExploreTab.ATLAS;
+        const activeTab = props.router.query.tab || ExploreTab.ATLASDATASET;
 
         return (
             <>
@@ -55,15 +54,15 @@ const ExploreTabs: React.FunctionComponent<IExploreTabsProps> = observer(
                         <li className="nav-item">
                             <a
                                 onClick={() =>
-                                    setTab(ExploreTab.ATLAS, props.router)
+                                    setTab(ExploreTab.ATLASDATASET, props.router)
                                 }
                                 className={`nav-link ${
-                                    activeTab === ExploreTab.ATLAS
+                                    activeTab === ExploreTab.ATLASDATASET
                                         ? 'active'
                                         : ''
                                 }`}
                             >
-                                Research Teams
+                                Atlas Datasets
                             </a>
                         </li>
                         <li className="nav-item">
@@ -177,7 +176,7 @@ const ExploreTabs: React.FunctionComponent<IExploreTabsProps> = observer(
                             activeTab !== 'atlas' ? 'd-none' : ''
                         }`}
                     >
-                        <WPAtlasTable
+                        <AtlasTable
                             router={props.router}
                             synapseAtlasData={props.allSynapseAtlases}
                             selectedAtlases={props.selectedSynapseAtlases}

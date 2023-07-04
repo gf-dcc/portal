@@ -1,51 +1,30 @@
 import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
-import PortalNavbar from '../components/PortalNavbar';
 import PreReleaseBanner from '../components/PreReleaseBanner';
-import Footer from '../components/Footer';
-import { GetServerSideProps, GetStaticProps } from 'next';
+
 import { CmsData } from '../types';
-import { getStaticContent } from '../ApiUtil';
+
 import PageWrapper from '../components/PageWrapper';
 
-export interface TransferProps {
-    data: CmsData[];
-}
-
-const Transfer = (data: TransferProps) => {
+const Transfer = () => {
     return (
         <>
+            <PreReleaseBanner />
             <PageWrapper>
                 <Container>
-                    <Row>
-                        <Breadcrumb>
-                            <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-                            <Breadcrumb.Item active>
-                                Data Transfer
-                            </Breadcrumb.Item>
-                        </Breadcrumb>
-                    </Row>
-                    <Row>
+                    <Row className={'contentWrapper'}>
                         <h1>Data Transfer</h1>
-                    </Row>
-                    <Row className="mt-3">
-                        <span
-                            dangerouslySetInnerHTML={{
-                                __html: data.data[0].content.rendered,
-                            }}
-                        />
+                        <p>
+                            We currently only accept data submissions of atlas
+                            teams that are part of Gray Foundation. If you would like to
+                            submit data, please see the Gray Foundation docs.
+                        </p>
                     </Row>
                 </Container>
             </PageWrapper>
         </>
     );
-};
-
-export const getStaticProps: GetStaticProps = async (context) => {
-    const data = await getStaticContent(['summary-blurb-data-transfer']);
-    return { props: { data } };
 };
 
 export default Transfer;

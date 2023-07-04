@@ -7,14 +7,14 @@ import Container from 'react-bootstrap/Container';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import { WPAtlas } from '../types';
 import styles from './homeStyles.module.scss';
-import { EntityReport, getAtlasPageURL } from '../lib/helpers';
+import { AtlasReport, getAtlasPageURL } from '../lib/helpers';
 import { Helmet } from 'react-helmet';
 
 export interface IHomePropsProps {
     hero_blurb: string;
     cards: any[];
     atlases: WPAtlas[];
-    synapseCounts: EntityReport[];
+    synapseCounts: AtlasReport[];
 }
 
 function dashboardIcon(text: string, description: string) {
@@ -92,7 +92,7 @@ const HomePage: React.FunctionComponent<IHomePropsProps> = ({
             >
                 <Row className="justify-content-md-center">
                     {synapseCounts &&
-                        synapseCounts.map((report: EntityReport) =>
+                        synapseCounts.map((report: AtlasReport) =>
                             dashboardIcon(report.text, report.description)
                         )}
                 </Row>
@@ -108,7 +108,7 @@ const HomePage: React.FunctionComponent<IHomePropsProps> = ({
             {/*        return (*/}
             {/*            <div className={styles.atlasCard}>*/}
             {/*                <h4>*/}
-            {/*                    <a href={getAtlasPageURL(atlas.htan_id)}>*/}
+            {/*                    <a href={getAtlasPageURL(atlas.team_id)}>*/}
             {/*                        {title}*/}
             {/*                    </a>*/}
             {/*                </h4>*/}
@@ -122,7 +122,7 @@ const HomePage: React.FunctionComponent<IHomePropsProps> = ({
             {/*                    />*/}
             {/*                    <a*/}
             {/*                        className={'btn btn-primary'}*/}
-            {/*                        href={getAtlasPageURL(atlas.htan_id)}*/}
+            {/*                        href={getAtlasPageURL(atlas.team_id)}*/}
             {/*                    >*/}
             {/*                        Explore*/}
             {/*                    </a>*/}

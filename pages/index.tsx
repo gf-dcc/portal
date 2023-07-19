@@ -33,7 +33,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         )
         .toString();
 
-    const atlases =  (JSON.parse(processedSynapseData)).atlases as Atlas[]
+    const atlases =  (JSON.parse(processedSynapseData)).superatlas as Atlas[]
 
     return {
         props: {

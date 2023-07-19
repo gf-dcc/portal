@@ -1,5 +1,5 @@
 import { DataSchemaData } from './dataSchemaHelpers';
-import { Atlas, AtlasDataset, Entity } from './helpers';
+import { Atlas, AtlasX, Entity } from './helpers';
 import { ActionMeta, ActionTypes, OptionTypeBase } from 'react-select';
 import _ from 'lodash';
 
@@ -118,7 +118,7 @@ export interface IFilterProps {
     files: Entity[];
     filters: { [key: string]: string[] };
     schemaDataById?: { [schemaDataId: string]: DataSchemaData };
-    atlasDatasets: AtlasDataset[];
+    atlasXs: AtlasX[];
     atlasData?: any;
 }
 

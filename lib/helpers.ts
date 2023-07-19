@@ -54,6 +54,7 @@ export interface BaseSerializableEntity {
     // Derived or attached in frontend
     atlas_id: string;
     atlas_name: string;
+    dataset_id: string;
     level: string;
     assayName?: string;
     primaryParents?: DataFileID[];
@@ -75,6 +76,7 @@ export interface Entity extends SerializableEntity {
     cases: Entity[];
 }
 
+// Using this for overall representation & dashboard summary of the larger BRCA "super" Atlas
 export type Atlas = {
     atlas_id: string;
     atlas_name: string;
@@ -86,7 +88,8 @@ export type Atlas = {
     num_biospecimens: number
 };
 
-export type AtlasDataset = {
+
+export type AtlasX = {
     team_id: string;
     team_name: string;
     num_cases: number;
@@ -94,12 +97,15 @@ export type AtlasDataset = {
     dataset_name: string;
     dataset_id: string;
     atlas_id: string;
+    atlas_name: string;
+    atlas_description: string;
+    publication: string;
 };
 
 export interface LoadDataResult {
     files: SerializableEntity[];
-    atlases: Atlas[],
-    atlasDatasets: AtlasDataset[];
+    superatlas: Atlas[],
+    atlases: AtlasX[];
     biospecimenByBiospecimenID: {
         [BiospecimenID: string]: SerializableEntity;
     };

@@ -8,12 +8,12 @@ import {
     sortByBiospecimenId,
     sortByHtanParentId,
 } from '../lib/dataTableHelpers';
-import { AtlasDataset, Entity } from '../lib/helpers';
+import { AtlasX, Entity } from '../lib/helpers';
 import EnhancedDataTable from './EnhancedDataTable';
 
 interface IBiospecimenTableProps {
     samples: Entity[];
-    synapseAtlases: AtlasDataset[];
+    synapseAtlases: AtlasX[];
     schemaDataById?: { [schemaDataId: string]: DataSchemaData };
 }
 

@@ -9,7 +9,7 @@ import {
     isNumericalSchemaData,
     SchemaDataId,
 } from './dataSchemaHelpers';
-import { AtlasDataset, Entity } from './helpers';
+import { AtlasX, Entity } from './helpers';
 
 export function getDefaultDataTableStyle() {
     return {
@@ -136,8 +136,9 @@ export function sortByBiospecimenId(rowA: Entity, rowB: Entity) {
     return defaultNumericalComparison(rowA, rowB, iteratees);
 }
 
-export function getAtlasColumn(atlases: AtlasDataset[]) {
+export function getAtlasColumn(atlases: AtlasX[]) {
     const atlasMap = _.keyBy(atlases, (a) => a.team_id);
+    // console.log(JSON.stringify(atlasMap))
 
     return {
         id: 'Lab Name',
@@ -146,7 +147,7 @@ export function getAtlasColumn(atlases: AtlasDataset[]) {
                 <span>Research Team</span>
             </Tooltip>
         ),
-        selector: (sample: Entity) => atlasMap[sample.atlas_id].team_name,
+        selector: (sample: Entity) => atlasMap["syn26560317"].team_name, // atlasMap[sample.atlas_id].team_name,
         wrap: true,
         sortable: true,
     };

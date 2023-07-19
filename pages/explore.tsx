@@ -68,7 +68,7 @@ class Search extends React.Component<{ router: NextRouter }, IFilterProps> {
         this.state = {
             files: [],
             filters: {},
-            atlasXs: [],
+            atlases: [],
             schemaDataById: {},
         };
 
@@ -171,7 +171,7 @@ class Search extends React.Component<{ router: NextRouter }, IFilterProps> {
             this.dataLoadingPromise.then((data) => {
                 this.setState({
                     files: fillInEntities(data),
-                    atlasXs: data.atlasXs,
+                    atlases: data.atlases,
                 });
             });
 
@@ -236,7 +236,7 @@ class Search extends React.Component<{ router: NextRouter }, IFilterProps> {
     }
 
     @computed get atlasMap() {
-        return _.keyBy(this.state.atlasXs, (a) => a.team_id);
+        return _.keyBy(this.state.atlases, (a) => a.team_id);
     }
 
     @computed

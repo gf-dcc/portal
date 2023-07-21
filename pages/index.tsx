@@ -10,7 +10,7 @@ import { GetStaticProps } from 'next';
 import PageWrapper from '../components/PageWrapper';
 import {
     computeDashboardData,
-    Atlas
+    AtlasX
 } from '../lib/helpers';
 
 const Home = (data: IHomePropsProps) => {
@@ -33,7 +33,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
         )
         .toString();
 
-    const atlases =  (JSON.parse(processedSynapseData)).superatlas as Atlas[]
+    const atlases =  (JSON.parse(processedSynapseData)).atlases as AtlasX[]
 
     return {
         props: {

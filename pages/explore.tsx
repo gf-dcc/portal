@@ -159,7 +159,7 @@ class Search extends React.Component<{ router: NextRouter }, IFilterProps> {
 
         // add the new ones
         newFilters.push(
-            ...selected.map((a) => ({ group, value: a.team_name }))
+            ...selected.map((a) => ({ group, value: a.atlas_id }))
         );
 
         updateSelectedFiltersInURL(newFilters, this.props.router);
@@ -236,7 +236,7 @@ class Search extends React.Component<{ router: NextRouter }, IFilterProps> {
     }
 
     @computed get atlasMap() {
-        return _.keyBy(this.state.atlases, (a) => a.team_id);
+        return _.keyBy(this.state.atlases, (a) => a.atlas_id);
     }
 
     @computed

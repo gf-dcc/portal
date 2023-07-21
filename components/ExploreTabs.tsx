@@ -62,7 +62,7 @@ const ExploreTabs: React.FunctionComponent<IExploreTabsProps> = observer(
                                         : ''
                                 }`}
                             >
-                                Atlas Datasets
+                                Atlases
                             </a>
                         </li>
                         <li className="nav-item">

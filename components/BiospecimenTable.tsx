@@ -39,9 +39,9 @@ export const BiospecimenTable: React.FunctionComponent<IBiospecimenTableProps> =
         columns,
         (c) => c.id === 'Biospecimen ID'
     );
-    // insert Atlas Name right after Biospecimen ID
+
     columns.splice(
-        indexOfBiospecimenId + 1,
+        indexOfBiospecimenId,
         0,
         getAtlasColumn(props.synapseAtlases)
     );

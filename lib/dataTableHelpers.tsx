@@ -137,17 +137,16 @@ export function sortByBiospecimenId(rowA: Entity, rowB: Entity) {
 }
 
 export function getAtlasColumn(atlases: AtlasX[]) {
-    const atlasMap = _.keyBy(atlases, (a) => a.team_id);
-    // console.log(JSON.stringify(atlasMap))
+    const atlasMap = _.keyBy(atlases, (a) => a.atlas_id);
 
     return {
-        id: 'Lab Name',
+        id: 'Atlas',
         name: (
-            <Tooltip overlay="Name of the Lab">
-                <span>Research Team</span>
+            <Tooltip overlay="Parent atlas">
+                <span>Atlas</span>
             </Tooltip>
         ),
-        selector: (sample: Entity) => atlasMap["syn26560317"].team_name, // atlasMap[sample.atlas_id].team_name,
+        selector: 'atlas_id',
         wrap: true,
         sortable: true,
     };

@@ -92,8 +92,8 @@ export const AttributeMap: { [attr in AttributeNames]: IAttributeInfo } = {
         displayName: 'Biospecimen',
     },
     [AttributeNames.AtlasName]: {
-        path: 'atlas_name',
-        displayName: 'Group',
+        path: 'atlas_id',
+        displayName: 'Atlas ID',
     },
     [AttributeNames.Stage]: {
         getValues: getCaseValues('AJCCPathologicStage'),
@@ -145,8 +145,8 @@ export type SynapseData = {
 };
 
 export type SynapseAtlas = {
-    team_id: string;
-    team_name: string;
+    atlas_id: string;
+    atlas_name: string;
 } & {
     [data_schema: string]: SynapseRecords;
 };

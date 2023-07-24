@@ -52,7 +52,7 @@
 
 (defn query-table-parse [id response result]
   (let [body (json/parse-string (:body response) true)
-        next-page-token (get-in body [:queryResult :nextPageToken])]
+        next-page-token (or (:nextPageToken body) (get-in body [:queryResult :nextPageToken]))]
     (if (nil? next-page-token)
       (conj result body)
       (do
@@ -68,7 +68,7 @@
   Entities are filtered by the clinical data or have placeholder 'NA' if unannotated."
   [biospecimens data]
   (->>(filter #(= (:type %) "file") data) ; TODO some folders used as symbolic files
-      (filter #(or (nil? (:BiospecimenID %)) (.contains biospecimens (:BiospecimenID %))))
+      (filter #(or (nil? (:BiospecimenID %)) (cset/subset? (set (json/parse-string (:BiospecimenID %))) biospecimens)))
       (map (fn [x]
              {:Component (or (:Component x) "NA")
               :projectId (:projectId x)
@@ -77,9 +77,9 @@
               :level "Unknown" ; TODO derive this
               :DataFileID (:id x)
               :dataset_id (:parentId x)
-              :biospecimenIds [(or (:BiospecimenID x) "NA_Biospecimen")]
-              :diagnosisIds [(or (:ParticipantID x) "NA_Participant")]
-              :demographicsIds [(or (:ParticipantID x) "NA_Participant")]}))))
+              :biospecimenIds (or (json/parse-string (:BiospecimenID x)) ["NA_Biospecimen"])
+              :diagnosisIds (or (json/parse-string (:ParticipantID x)) ["NA_Participant"])
+              :demographicsIds (or (json/parse-string (:ParticipantID x)) ["NA_Participant"]) }))))
 
 (defn transform-atlases
   "Start translation to portal AtlasX."
@@ -180,18 +180,20 @@
         {:NA_Biospecimen {:Component "Biospecimen" :BiospecimenID "NA_Biospecimen"
                           :ParentID "NA_Participant" :atlas_id "" :atlas_name ""}}))
 
-(def all-biospecimens (map :BiospecimenID clinical-biospecimens-processed))
+(def all-biospecimens (set (map :SampleID clinical-biospecimens)))
 
 (def files
   (->>(query-table file-tb)
-      (result-map-all)
-      (transform-files all-biospecimens)))
+      (result-map-all)))
+
+(def files-inter "Intermediate rep to track how many files were filtered out by un-matched Biospecimen IDs"
+  (transform-files all-biospecimens files))
 
 (def datasets (pipe dataset-tb transform-datasets))
 
 (def files-processed
-  "Filter and get atlas_id via dataset"
-  (->>(cset/join files (map #(select-keys % [:dataset_id :in_atlas]) datasets))
+  "Filter and inherit atlas_id via dataset"
+  (->>(cset/join files-inter (map #(select-keys % [:dataset_id :dataset_name :in_atlas]) datasets))
       (map #(cset/rename-keys % {:in_atlas :atlas_id}))))
 
 (def clinical-participants-src
@@ -202,6 +204,13 @@
 (def clinical-participants
   (->>(map #(result-map-all (query-table (:id %))) clinical-participants-src)
       (mapcat #(merge-src %1 %2) clinical-participants-src)))
+
+(def file-cases
+  (set (mapcat json/parse-string (map :ParticipantID files))))
+
+(def all-cases (set (map :ParticipantID clinical-participants)))
+
+(println (str "File cases are a subset of all cases: " (cset/subset? file-cases all-cases)))
 
 (def placeholder_P
   {:NA_Participant {:Component "Demographics" :ParticipantID "NA_Participant"

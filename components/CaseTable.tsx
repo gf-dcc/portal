@@ -7,12 +7,12 @@ import {
     getDefaultDataTableStyle,
     sortByHtanParticipantId,
 } from '../lib/dataTableHelpers';
-import { AtlasDataset, convertAgeInDaysToYears, Entity } from '../lib/helpers';
+import { AtlasX, convertAgeInDaysToYears, Entity } from '../lib/helpers';
 import EnhancedDataTable from './EnhancedDataTable';
 
 interface ICaseTableProps {
     cases: Entity[];
-    synapseAtlases: AtlasDataset[];
+    synapseAtlases: AtlasX[];
     schemaDataById?: { [schemaDataId: string]: DataSchemaData };
 }
 

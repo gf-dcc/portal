@@ -54,6 +54,7 @@ export interface BaseSerializableEntity {
     // Derived or attached in frontend
     atlas_id: string;
     atlas_name: string;
+    dataset_id: string;
     level: string;
     assayName?: string;
     primaryParents?: DataFileID[];
@@ -86,20 +87,18 @@ export type Atlas = {
     num_biospecimens: number
 };
 
-export type AtlasDataset = {
-    team_id: string;
-    team_name: string;
-    num_cases: number;
-    num_biospecimens: number;
-    dataset_name: string;
-    dataset_id: string;
-    atlas_id: string;
+export interface AtlasX extends Atlas {
+    datasets: string[]; // we will want to actually include dataset accessions contained in this atlas, not just summary num_datasets
+    publication: string[];
+    status: string;
+    governance: string; // surface useful GF-specific classification
 };
+
 
 export interface LoadDataResult {
     files: SerializableEntity[];
-    atlases: Atlas[],
-    atlasDatasets: AtlasDataset[];
+    superatlas: any, // currently not used yet since we still rely on dashboard helper
+    atlases: AtlasX[];
     biospecimenByBiospecimenID: {
         [BiospecimenID: string]: SerializableEntity;
     };
@@ -299,7 +298,8 @@ export type AtlasReport = {
     text: string;
 };
 
-export function computeDashboardData(atlases: Atlas[]): AtlasReport[] {
+export function computeDashboardData(atlases: AtlasX[]): AtlasReport[] {
+
     return [
         { description: 'Atlases', text: atlases.length.toString() },
         { description: 'Datasets', text: atlases.map(a => a.num_datasets).reduce((a, b) => a + b, 0).toString() },

@@ -2,7 +2,7 @@ import { observer } from 'mobx-react';
 import { NextRouter } from 'next/router';
 import React from 'react';
 
-import { AtlasDataset, Entity, setTab } from '../lib/helpers';
+import { AtlasX, Entity, setTab } from '../lib/helpers';
 import BiospecimenTable from './BiospecimenTable';
 import CaseTable from './CaseTable';
 import FileTable from './FileTable';
@@ -21,14 +21,14 @@ interface IExploreTabsProps {
     cases: Entity[];
     filteredCasesByNonAtlasFilters: Entity[];
     filteredSamplesByNonAtlasFilters: Entity[];
-    //AtlasDataset: AtlasDataset[];
+    //AtlasX: AtlasX[];
     schemaDataById?: { [schemaDataId: string]: DataSchemaData };
     getGroupsByPropertyFiltered: any;
-    filteredSynapseAtlases: AtlasDataset[];
-    filteredSynapseAtlasesByNonAtlasFilters: AtlasDataset[];
-    selectedSynapseAtlases: AtlasDataset[];
-    allSynapseAtlases: AtlasDataset[];
-    onSelectAtlas?: (selected: AtlasDataset[]) => void;
+    filteredSynapseAtlases: AtlasX[];
+    filteredSynapseAtlasesByNonAtlasFilters: AtlasX[];
+    selectedSynapseAtlases: AtlasX[];
+    allSynapseAtlases: AtlasX[];
+    onSelectAtlas?: (selected: AtlasX[]) => void;
 
     toggleShowAllBiospecimens: () => void;
     showAllBiospecimens: boolean;
@@ -38,14 +38,14 @@ interface IExploreTabsProps {
 
 export enum ExploreTab {
     FILE = 'file',
-    ATLASDATASET = 'atlas',
+    ATLAS = 'atlas',
     BIOSPECIMEN = 'biospecimen',
     CASES = 'cases',
 }
 
 const ExploreTabs: React.FunctionComponent<IExploreTabsProps> = observer(
     (props) => {
-        const activeTab = props.router.query.tab || ExploreTab.ATLASDATASET;
+        const activeTab = props.router.query.tab || ExploreTab.ATLAS;
 
         return (
             <>
@@ -54,15 +54,15 @@ const ExploreTabs: React.FunctionComponent<IExploreTabsProps> = observer(
                         <li className="nav-item">
                             <a
                                 onClick={() =>
-                                    setTab(ExploreTab.ATLASDATASET, props.router)
+                                    setTab(ExploreTab.ATLAS, props.router)
                                 }
                                 className={`nav-link ${
-                                    activeTab === ExploreTab.ATLASDATASET
+                                    activeTab === ExploreTab.ATLAS
                                         ? 'active'
                                         : ''
                                 }`}
                             >
-                                Atlas Datasets
+                                Atlases
                             </a>
                         </li>
                         <li className="nav-item">

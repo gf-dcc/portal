@@ -3,7 +3,7 @@ import { NextRouter } from 'next/router';
 import Tooltip from 'rc-tooltip';
 import React from 'react';
 import { getDefaultDataTableStyle } from '../lib/dataTableHelpers';
-import { AtlasDataset, Entity, setTab } from '../lib/helpers';
+import { AtlasX, Entity, setTab } from '../lib/helpers';
 import EnhancedDataTable from './EnhancedDataTable';
 import { observer } from 'mobx-react';
 import { action, computed, makeObservable, observable } from 'mobx';
@@ -16,10 +16,10 @@ import { ISelectedFiltersByAttrName } from '../lib/types';
 
 interface IAtlasTableProps {
     router: NextRouter;
-    synapseAtlasData: AtlasDataset[];
-    selectedAtlases?: AtlasDataset[];
-    filteredAtlases?: AtlasDataset[];
-    onSelectAtlas?: (selected: AtlasDataset[]) => void;
+    synapseAtlasData: AtlasX[];
+    selectedAtlases?: AtlasX[];
+    filteredAtlases?: AtlasX[];
+    onSelectAtlas?: (selected: AtlasX[]) => void;
     selectedFiltersByAttrName: ISelectedFiltersByAttrName;
     filteredCases: Entity[];
     filteredBiospecimens: Entity[];
@@ -90,6 +90,28 @@ const CBioPortalViewerLink = (props: { url: string; count: number }) => (
     </Tooltip>
 );
 
+const OtherAppViewerLink = (props: { url: string; count: number }) => (
+    <Tooltip overlay="Team-maintained app/viewer">
+        <a
+            href={props.url}
+            target="_blank"
+            style={{
+                paddingRight: 8,
+                fontFamily: 'monospace',
+                textDecoration: 'none',
+            }}
+        >
+            {props.count < 100 && '\u00A0'}
+            {props.count < 10 && '\u00A0'}
+            {props.count}{' '}
+            <img
+                width={25}
+                src={'data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLW1pdGVybGltaXQ9IjIiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJtMTYuNDc2IDNjLjM2OSAwIC43MDkuMTk3Ljg4Ny41MTQuOSAxLjU5NSAzLjYzMyA2LjQ0NSA0LjUwOSA4LjAwMS4wNzUuMTMxLjExOC4yNzYuMTI2LjQyMy4wMTIuMTg3LS4wMjkuMzc3LS4xMjYuNTQ3LS44NzYgMS41NTYtMy42MDkgNi40MDYtNC41MDkgOC0uMTc4LjMxOC0uNTE4LjUxNS0uODg3LjUxNWgtOC45NTFjLS4zNjkgMC0uNzA5LS4xOTctLjg4Ny0uNTE1LS44OTktMS41OTQtMy42MzQtNi40NDQtNC41MS04LS4wODUtLjE1MS0uMTI4LS4zMTgtLjEyOC0uNDg1cy4wNDMtLjMzNC4xMjgtLjQ4NWMuODc2LTEuNTU2IDMuNjExLTYuNDA2IDQuNTEtOC4wMDEuMTc4LS4zMTcuNTE4LS41MTQuODg3LS41MTR6IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48L3N2Zz4='}
+            />
+        </a>
+    </Tooltip>
+);
+
 const CellxgeneViewerLink = (props: { url: string; count: number }) => (
     <Tooltip overlay="cellxgene">
         <a
@@ -141,15 +163,15 @@ const BroadSingleCellPortalViewerLink = (props: {
     </Tooltip>
 );
 
-type AtlasTableData = AtlasDataset & { isSelected: boolean };
+type AtlasTableData = AtlasX & { isSelected: boolean };
 
 @observer
 export default class AtlasTable extends React.Component<IAtlasTableProps> {
-    @observable metadataModalAtlas: AtlasDataset | null = null;
+    @observable metadataModalAtlas: AtlasX | null = null;
 
     @computed
     get selectedAtlases() {
-        return _.keyBy(this.props.selectedAtlases || [], (a) => a.team_id);
+        return _.keyBy(this.props.selectedAtlases || [], (a) => a.atlas_id);
     }
 
     @computed get hasAtlasesSelected() {
@@ -161,8 +183,8 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
         makeObservable(this);
     }
 
-    isRowSelected = (atlas: AtlasDataset) => {
-        return this.selectedAtlases[atlas.team_id] !== undefined;
+    isRowSelected = (atlas: AtlasX) => {
+        return this.selectedAtlases[atlas.atlas_id] !== undefined;
     };
 
     // we need to update data every time the selection changes to rerender the table
@@ -195,23 +217,57 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
     get columns() {
         return [
             {
-                name: 'Lab Name',
-                selector: (atlas: AtlasDataset) => atlas.team_name,
+                name: 'Atlas Title',
+                selector: (atlas: AtlasX) => atlas.atlas_name,
                 grow: 1.25,
                 wrap: true,
                 sortable: true,
             },
             {
+                name: 'Atlas ID',
+                selector: (atlas: AtlasX) => atlas.atlas_id,
+                wrap: true,
+                sortable: false,
+            },
+            {
+                name: 'Lead Research Teams',
+                selector: (atlas: AtlasX) => atlas.team_name,
+                grow: 1.25,
+                wrap: true,
+                sortable: true,
+            },
+            {
+                name: 'Status',
+                selector: (atlas: AtlasX) => atlas.status,
+                grow: 1.25,
+                wrap: true,
+                sortable: true,
+            },
+            {
+                name: 'Publication Link',
+                selector: (atlas: AtlasX) => atlas.publication,
+                grow: 1.25,
+                wrap: true,
+                sortable: true,
+            },
+            {
+                name: 'Dataset Accessions',
+                selector: (atlas: AtlasX) => atlas.datasets, // TODO render as links
+                grow: 1.25,
+                wrap: true,
+                sortable: false,
+            },
+            {
                 name: 'Cases',
                 grow: 0.5,
                 selector: 'num_cases',
-                cell: (atlas: AtlasDataset) => (
+                cell: (atlas: AtlasX) => (
                     <span className="ml-auto">
                         {this.shouldShowFilteredFractions
                             ? `${
                                   (
                                       this.filteredCasesByAtlas[
-                                          atlas.team_id
+                                          atlas.atlas_id
                                       ] || []
                                   ).length
                               }/`
@@ -224,13 +280,13 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
             {
                 name: 'Biospecimens',
                 selector: 'num_biospecimens',
-                cell: (atlas: AtlasDataset) => (
+                cell: (atlas: AtlasX) => (
                     <span className="ml-auto">
                         {this.shouldShowFilteredFractions
                             ? `${
                                   (
                                       this.filteredBiospecimensByAtlas[
-                                          atlas.team_id
+                                          atlas.atlas_id
                                       ] || []
                                   ).length
                               }/`
@@ -242,10 +298,10 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
             },
             {
                 name: 'Viewers',
-                selector: 'team_id', // dummy selector - you need to put something or else nothing will render
+                selector: 'atlas_id', // dummy selector - you need to put something or else nothing will render
                 grow: 1.5,
-                cell: (atlas: AtlasDataset) => {
-                    if (atlas.dataset_id === 'syn123') {
+                cell: (atlas: AtlasX) => {
+                    if (atlas.atlas_id === 'syn51755918') {
                         return (
                             <>
                                 <CellxgeneViewerLink
@@ -262,7 +318,7 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                                 />
                             </>
                         );
-                    } else if (atlas.dataset_id === 'syn1234') {
+                    } else if (atlas.atlas_id === 'syn51755921') {
                         return (
                             <CBioPortalViewerLink
                                 url={
@@ -271,11 +327,20 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                                 count={1}
                             />
                         );
-                    } else if (atlas.dataset_id === 'syn12345') {
+                    } else if (atlas.atlas_id === 'syn52047509') {
                         return (
                             <CBioPortalViewerLink
                                 url={
                                     'https://triage.cbioportal.mskcc.org/study/summary?id=brca_ellisen_2022'
+                                }
+                                count={1}
+                            />
+                        );
+                    } else if (atlas.atlas_id === 'syn51755920') {
+                        return (
+                            <OtherAppViewerLink
+                                url={
+                                    'https://kinase-library.phosphosite.org/'
                                 }
                                 count={1}
                             />
@@ -285,12 +350,6 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                     }
                 },
             },
-            // {
-            //     name: 'Atlas ID',
-            //     selector: (atlas: Atlas) => atlas.team_id.toUpperCase(),
-            //     wrap: true,
-            //     sortable: true,
-            // },
         ];
     }
 
@@ -298,7 +357,7 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
     onSelect = (state: {
         allSelected: boolean;
         selectedCount: number;
-        selectedRows: AtlasDataset[];
+        selectedRows: AtlasX[];
     }) => {
         if (this.props.onSelectAtlas) {
             this.props.onSelectAtlas(state.selectedRows);

@@ -1,5 +1,5 @@
 import { DataSchemaData } from './dataSchemaHelpers';
-import { Atlas, AtlasDataset, Entity } from './helpers';
+import { Atlas, AtlasX, Entity } from './helpers';
 import { ActionMeta, ActionTypes, OptionTypeBase } from 'react-select';
 import _ from 'lodash';
 
@@ -92,8 +92,8 @@ export const AttributeMap: { [attr in AttributeNames]: IAttributeInfo } = {
         displayName: 'Biospecimen',
     },
     [AttributeNames.AtlasName]: {
-        path: 'atlas_name',
-        displayName: 'Group',
+        path: 'atlas_id',
+        displayName: 'Atlas ID',
     },
     [AttributeNames.Stage]: {
         getValues: getCaseValues('AJCCPathologicStage'),
@@ -118,7 +118,7 @@ export interface IFilterProps {
     files: Entity[];
     filters: { [key: string]: string[] };
     schemaDataById?: { [schemaDataId: string]: DataSchemaData };
-    atlasDatasets: AtlasDataset[];
+    atlases: AtlasX[];
     atlasData?: any;
 }
 
@@ -145,8 +145,8 @@ export type SynapseData = {
 };
 
 export type SynapseAtlas = {
-    team_id: string;
-    team_name: string;
+    atlas_id: string;
+    atlas_name: string;
 } & {
     [data_schema: string]: SynapseRecords;
 };

@@ -20,7 +20,7 @@ import {
     groupFilesByAttrNameAndValue,
 } from '../lib/filterHelpers';
 import {
-    AtlasDataset,
+    AtlasX,
     Entity,
     fetchData,
     fillInEntities,
@@ -68,7 +68,7 @@ class Search extends React.Component<{ router: NextRouter }, IFilterProps> {
         this.state = {
             files: [],
             filters: {},
-            atlasDatasets: [],
+            atlases: [],
             schemaDataById: {},
         };
 
@@ -150,7 +150,7 @@ class Search extends React.Component<{ router: NextRouter }, IFilterProps> {
     }
 
     @action.bound
-    onSelectAtlas(selected: AtlasDataset[]) {
+    onSelectAtlas(selected: AtlasX[]) {
         const group = AttributeNames.AtlasName;
 
         // remove all previous atlas filters
@@ -159,7 +159,7 @@ class Search extends React.Component<{ router: NextRouter }, IFilterProps> {
 
         // add the new ones
         newFilters.push(
-            ...selected.map((a) => ({ group, value: a.team_name }))
+            ...selected.map((a) => ({ group, value: a.atlas_id }))
         );
 
         updateSelectedFiltersInURL(newFilters, this.props.router);
@@ -171,7 +171,7 @@ class Search extends React.Component<{ router: NextRouter }, IFilterProps> {
             this.dataLoadingPromise.then((data) => {
                 this.setState({
                     files: fillInEntities(data),
-                    atlasDatasets: data.atlasDatasets,
+                    atlases: data.atlases,
                 });
             });
 
@@ -236,7 +236,7 @@ class Search extends React.Component<{ router: NextRouter }, IFilterProps> {
     }
 
     @computed get atlasMap() {
-        return _.keyBy(this.state.atlasDatasets, (a) => a.team_id);
+        return _.keyBy(this.state.atlases, (a) => a.atlas_id);
     }
 
     @computed

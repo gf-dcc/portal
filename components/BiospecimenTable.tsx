@@ -8,12 +8,12 @@ import {
     sortByBiospecimenId,
     sortByHtanParentId,
 } from '../lib/dataTableHelpers';
-import { AtlasDataset, Entity } from '../lib/helpers';
+import { AtlasX, Entity } from '../lib/helpers';
 import EnhancedDataTable from './EnhancedDataTable';
 
 interface IBiospecimenTableProps {
     samples: Entity[];
-    synapseAtlases: AtlasDataset[];
+    synapseAtlases: AtlasX[];
     schemaDataById?: { [schemaDataId: string]: DataSchemaData };
 }
 
@@ -39,9 +39,9 @@ export const BiospecimenTable: React.FunctionComponent<IBiospecimenTableProps> =
         columns,
         (c) => c.id === 'Biospecimen ID'
     );
-    // insert Atlas Name right after Biospecimen ID
+
     columns.splice(
-        indexOfBiospecimenId + 1,
+        indexOfBiospecimenId,
         0,
         getAtlasColumn(props.synapseAtlases)
     );

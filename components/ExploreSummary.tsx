@@ -47,7 +47,9 @@ export const ExploreSummary: React.FunctionComponent<IExploreSummaryProps> = (
                 <div>{pluralize('Cancer Type', cancerTypeCount, true)}</div>
                 <div>{pluralize('Case', props.filteredCaseCount, true)}</div>
                 <div>
-                        Biospecimen: {props.filteredBiospecimenCount}
+                {props.filteredBiospecimenCount === 1
+                    ? 'Biospecimen'
+                    : 'Biospecimens'}: {props.filteredBiospecimenCount}      
                 </div>
                 <div>{pluralize('Assay', assayCount, true)}</div>
                 <div>{pluralize('File', fileCount, true)}</div>

@@ -39,7 +39,6 @@ interface IExploreTabsProps {
 export enum ExploreTab {
     FILE = 'file',
     ATLAS = 'atlas',
-    BIOSPECIMEN = 'biospecimen',
     CASES = 'cases',
 }
 
@@ -79,20 +78,7 @@ const ExploreTabs: React.FunctionComponent<IExploreTabsProps> = observer(
                                 Cases
                             </a>
                         </li>
-                        <li className="nav-item">
-                            <a
-                                onClick={() =>
-                                    setTab(ExploreTab.BIOSPECIMEN, props.router)
-                                }
-                                className={`nav-link ${
-                                    activeTab === ExploreTab.BIOSPECIMEN
-                                        ? 'active'
-                                        : ''
-                                }`}
-                            >
-                                Biospecimens
-                            </a>
-                        </li>
+                
                         <li className="nav-item">
                             <a
                                 onClick={() =>
@@ -126,27 +112,6 @@ const ExploreTabs: React.FunctionComponent<IExploreTabsProps> = observer(
                     </div>
                 )}
 
-                {activeTab === ExploreTab.BIOSPECIMEN && (
-                    <div
-                        className={`tab-content biospecimen ${
-                            activeTab !== ExploreTab.BIOSPECIMEN ? 'd-none' : ''
-                        }`}
-                    >
-                        {/*<label className="show-all-checkbox">
-                            <input
-                                type="checkbox"
-                                checked={props.showAllBiospecimens}
-                                onClick={props.toggleShowAllBiospecimens}
-                            />
-                            Show all biospecimens from filtered files
-                        </label>*/}
-                        <BiospecimenTable
-                            synapseAtlases={props.filteredSynapseAtlases}
-                            samples={props.samples}
-                            schemaDataById={props.schemaDataById}
-                        />
-                    </div>
-                )}
 
                 {activeTab === ExploreTab.CASES && (
                     <div

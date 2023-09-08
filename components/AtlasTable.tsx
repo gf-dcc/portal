@@ -217,14 +217,14 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
     get columns() {
         return [
             {
-                name: 'Atlas Title',
+                name: 'Project Title',
                 selector: (atlas: AtlasX) => atlas.atlas_name,
                 grow: 1.25,
                 wrap: true,
                 sortable: true,
             },
             {
-                name: 'Atlas ID',
+                name: 'Project ID',
                 selector: (atlas: AtlasX) => atlas.atlas_id,
                 wrap: true,
                 sortable: false,

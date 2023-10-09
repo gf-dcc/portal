@@ -31,3 +31,9 @@ yarn-error.log*
 *.iml
 
 .now
+
+# other linter and IDE data
+
+**/.clj-kondo
+**/.lsp
+**/.nrepl-port 

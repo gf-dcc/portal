@@ -39,17 +39,20 @@ Alternatively, we have set up a devcontainer config, so start a GitHub codespace
 Whenever the app is run, you should see the unzipped `public/processed_syn_data.json` created from `public/processed_syn_data.json.gz`. Updating data means some extract/transform steps to create a new version of this gzipped archive: export data from Synapse, transform it into the structure needed, then compress to archive format. This is handled by the script in `data/export_syn_data.clj`. Have [babashka](https://babashka.org/) installed and a valid `SYNAPSE_SERVICE_TOKEN` stored in the environment*, then at the root of project do: 
 `bb data/export_syn_data.clj`.
 
-Run the dev app to see changes.
+**Start the dev app to see expected changes.**
 
 The script will generally need to be updated in cases where the backend tables/configuration changes or the data needs to be transformed differently.
 
-*Note: All of this is set up using Codespace, and authentication will work as long as you are on the org team.
+*Note: All of this is set up if in Codespace, and authentication will work as long as you are on the org team.
 
-#### PRs and Deployment
+#### Testing, PRs and Deployment
 
-PRs generate preview builds, and merges into `main` or `develop` will be deployed automatically with Next.js.  
+TODO: more automated tests.
 
-## Learn More about Next.js
+Currently, the main "test" is currently building the project in PR previews. 
+Merges into `develop` or `main` will also be deployed automatically with Next.js. 
+
+### Learn More about Next.js
 
 To learn more about Next.js, take a look at the following resources:
 

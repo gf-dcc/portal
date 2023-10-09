@@ -3,6 +3,8 @@
 (require '[cheshire.core :as json])
 (require '[clojure.java.io :as io])
 (require '[clojure.set :as cset])
+(:import java.util.zip.GZIPInputStream
+         java.util.zip.GZIPOutputStream)
 
 (def cli-opts {:output {:desc "Base output file."
                         :default "public/processed_syn_data.json"}
@@ -35,7 +37,8 @@
     input: something that can be copied using io/copy (e.g. filename ...).
     output: something that can be opened by io/output-stream. Bytes written to the resulting stream will be gzip compressed."
   [input output & opts]
-  (with-open [output (-> output io/output-stream java.util.zip.GZIPOutputStream.)]
+  (with-open [input (-> (io/input-stream input))
+              output (-> output io/output-stream java.util.zip.GZIPOutputStream.)]
     (apply io/copy input output opts)))
 
 ; Synapse API stuff

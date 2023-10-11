@@ -306,7 +306,7 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                             <>
                                 <CellxgeneViewerLink
                                     url={
-                                        'https://brugge-singlecell.herokuapp.com'
+                                        'https://cellxgene.cziscience.com/collections/99f1515b-46a2-4bc4-94c3-f62659dc1eb4'
                                     }
                                     count={1}
                                 />

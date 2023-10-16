@@ -1,9 +1,20 @@
+(require '[babashka.cli :as cli])
 (require '[babashka.http-client :as http])
 (require '[cheshire.core :as json])
 (require '[clojure.java.io :as io])
 (require '[clojure.set :as cset])
+(:import java.util.zip.GZIPInputStream
+         java.util.zip.GZIPOutputStream)
 
-(def token (System/getenv "SYNAPSE_AUTH_TOKEN"))
+(def cli-opts {:output {:desc "Base output file."
+                        :default "public/processed_syn_data.json"}
+               :no-gz {:desc "Don't gzip the output."}})
+
+;(println (cli/format-opts {:spec cli-opts}))
+
+(def opts (cli/parse-opts *command-line-args* {:spec cli-opts}))
+
+(def token (System/getenv "SYNAPSE_SERVICE_TOKEN"))
 (def atlas-tb "syn51755925")
 (def dataset-tb "syn27608832")
 (def clinical-tb "syn51857871")
@@ -11,6 +22,24 @@
 (def entity-endpoint "https://repo-prod.prod.sagebase.org/repo/v1/entity/")
 
 (declare query-table-parse)
+
+; gzip utils
+(defn gunzip
+  "Decompress data.
+    input: gzipped file that can be opened by io/input-stream.
+    output: something that can be copied to by io/copy (e.g. filename ...)."
+  [input output & opts]
+  (with-open [input (-> input io/input-stream java.util.zip.GZIPInputStream.)]
+    (apply io/copy input output opts)))
+
+(defn gzip
+  "Compress data.
+    input: something that can be copied using io/copy (e.g. filename ...).
+    output: something that can be opened by io/output-stream. Bytes written to the resulting stream will be gzip compressed."
+  [input output & opts]
+  (with-open [input (-> (io/input-stream input))
+              output (-> output io/output-stream java.util.zip.GZIPOutputStream.)]
+    (apply io/copy input output opts)))
 
 ; Synapse API stuff
 (defn query-bundle
@@ -166,91 +195,95 @@
 (defn merge-src [src records] (map #(merge (select-keys src [:inAtlas :inDataset]) %) records))
 
 ; NOTE Processing has to be done in certain order, where clinical data is used to filter files
-(def clinical-biospecimens-src
-  (let [sql (str "SELECT * FROM " clinical-tb " WHERE inPortal is true and Component in ('Biospecimen','Participant+Biospecimen')")]
-    (->>(query-table clinical-tb {:sql sql})
-        (result-map-all))))
+(when (not (nil? (opts :output)))
+  (def clinical-biospecimens-src
+    (let [sql (str "SELECT * FROM " clinical-tb " WHERE inPortal is true and Component in ('Biospecimen','Participant+Biospecimen')")]
+      (->>(query-table clinical-tb {:sql sql})
+          (result-map-all))))
 
-(def clinical-biospecimens
-  (->>(map #(result-map-all (query-table (:id %))) clinical-biospecimens-src)
-      (mapcat #(merge-src %1 %2) clinical-biospecimens-src)))
+  (def clinical-biospecimens
+    (->>(map #(result-map-all (query-table (:id %))) clinical-biospecimens-src)
+        (mapcat #(merge-src %1 %2) clinical-biospecimens-src)))
 
-(def clinical-biospecimens-processed
-  (conj (transform-biospecimens clinical-biospecimens)
+  (def clinical-biospecimens-processed
+    (conj (transform-biospecimens clinical-biospecimens)
         {:NA_Biospecimen {:Component "Biospecimen" :BiospecimenID "NA_Biospecimen"
                           :ParentID "NA_Participant" :atlas_id "" :atlas_name ""}}))
 
-(def all-biospecimens (set (map :SampleID clinical-biospecimens)))
+  (def all-biospecimens (set (map :SampleID clinical-biospecimens)))
 
-(def files
-  (->>(query-table file-tb)
-      (result-map-all)))
+  (def files
+    (->>(query-table file-tb)
+        (result-map-all)))
 
-(def files-inter "Intermediate rep to track how many files were filtered out by un-matched Biospecimen IDs"
-  (transform-files all-biospecimens files))
+  (def files-inter "Intermediate rep to track how many files were filtered out by un-matched Biospecimen IDs"
+    (transform-files all-biospecimens files))
 
-(def datasets (pipe dataset-tb transform-datasets))
+  (def datasets (pipe dataset-tb transform-datasets))
 
-(def files-processed
-  "Filter and inherit atlas_id via dataset"
-  (->>(cset/join files-inter (map #(select-keys % [:dataset_id :dataset_name :in_atlas]) datasets))
-      (map #(cset/rename-keys % {:in_atlas :atlas_id}))))
+  (def files-processed "Filter and inherit atlas_id via dataset"
+    (->>(cset/join files-inter (map #(select-keys % [:dataset_id :dataset_name :in_atlas]) datasets))
+        (map #(cset/rename-keys % {:in_atlas :atlas_id}))))
 
-(def clinical-participants-src
-  (let [sql (str "SELECT * FROM " clinical-tb " WHERE inPortal is true and Component in ('Participant', 'Participant+Biospecimen')")]
-    (->>(query-table clinical-tb {:sql sql})
-        (result-map-all))))
+  (def clinical-participants-src
+    (let [sql (str "SELECT * FROM " clinical-tb " WHERE inPortal is true and Component in ('Participant', 'Participant+Biospecimen')")]
+      (->>(query-table clinical-tb {:sql sql})
+          (result-map-all))))
 
-(def clinical-participants
-  (->>(map #(result-map-all (query-table (:id %))) clinical-participants-src)
-      (mapcat #(merge-src %1 %2) clinical-participants-src)))
+  (def clinical-participants
+    (->>(map #(result-map-all (query-table (:id %))) clinical-participants-src)
+        (mapcat #(merge-src %1 %2) clinical-participants-src)))
 
-(def file-cases
-  (set (mapcat json/parse-string (map :ParticipantID files))))
+  (def file-cases
+    (set (mapcat json/parse-string (map :ParticipantID files))))
 
-(def all-cases (set (map :ParticipantID clinical-participants)))
+  (def all-cases (set (map :ParticipantID clinical-participants)))
 
-(println (str "File cases are a subset of all cases: " (cset/subset? file-cases all-cases)))
+  (println (str "File cases are a subset of all cases: " (cset/subset? file-cases all-cases)))
 
-(def placeholder_P
-  {:NA_Participant {:Component "Demographics" :ParticipantID "NA_Participant"
-                    :Race "NA" :Ethnicity "NA" :atlas_id "" :atlas_name ""}})
+  (def placeholder_P
+    {:NA_Participant {:Component "Demographics" :ParticipantID "NA_Participant"
+                      :Race "NA" :Ethnicity "NA" :atlas_id "" :atlas_name ""}})
 
-(def clinical-demographics (conj (transform-demographics clinical-participants) placeholder_P))
+  (def clinical-demographics (conj (transform-demographics clinical-participants) placeholder_P))
 
-(def clinical-diagnosis (conj (transform-diagnosis clinical-participants) placeholder_P))
+  (def clinical-diagnosis (conj (transform-diagnosis clinical-participants) placeholder_P))
 
-(def atlases (pipe atlas-tb transform-atlases))
+  (def atlases (pipe atlas-tb transform-atlases))
 
-(def atlases-processed "Derive summaries, filter out ones with 0 datasets, fill in non-clinical atlases with 0's"
-  (->>(join-on-key :atlas_id (group-datasets datasets) atlases)
-      (join-on-key :atlas_id (count-datasets datasets))
-      (join-on-key :atlas_id (count-biospecimens clinical-biospecimens))
-      (join-on-key :atlas_id (count-cases clinical-participants))
-      (filter #(:datasets %))
-      (map #(if (nil? (:num_cases %)) (merge {:num_biospecimens 0 :num_cases 0} %) (identity %)))))
+  (def atlases-processed "Derive summaries, filter out ones with 0 datasets, fill in non-clinical atlases with 0's"
+    (->>(join-on-key :atlas_id (group-datasets datasets) atlases)
+        (join-on-key :atlas_id (count-datasets datasets))
+        (join-on-key :atlas_id (count-biospecimens clinical-biospecimens))
+        (join-on-key :atlas_id (count-cases clinical-participants))
+        (filter #(:datasets %))
+        (map #(if (nil? (:num_cases %)) (merge {:num_biospecimens 0 :num_cases 0} %) (identity %)))))
 
-(def superatlas
-  "Sum of all team-specific atlases, i.e. this is the Pangaea.
-  An undercount of all assets as includes only what is visible in the portal and all NAs count as 1."
-  {:atlas_id "BRCA"
-   :atlas_name "Gray Foundation BRCA Pre-cancer Atlas"
-   :num_atlases (count atlases-processed)
-   :num_datasets (reduce + (map #(count (:datasets %)) atlases-processed))
-   :num_biospecimens (count clinical-biospecimens-processed)
-   :num_cases (count clinical-diagnosis)})
+  (def superatlas
+    "Sum of all team-specific atlases, i.e. this is the Pangaea.
+    An undercount of all assets as includes only what is visible in the portal and all NAs count as 1."
+    {:atlas_id "BRCA"
+     :atlas_name "Gray Foundation BRCA Pre-cancer Atlas"
+     :num_atlases (count atlases-processed)
+     :num_datasets (reduce + (map #(count (:datasets %)) atlases-processed))
+     :num_biospecimens (count clinical-biospecimens-processed)
+     :num_cases (count clinical-diagnosis)})
 
 ; TODO Some sanity checks:
 ; biospecimens should be >= cases
 
-(def processed-data
-  {:files files-processed
-   :superatlas superatlas
-   :atlases atlases-processed
-   :biospecimenByBiospecimenID (into (hash-map) clinical-biospecimens-processed)
-   :diagnosisByParticipantID (into (hash-map) clinical-diagnosis)
-   :demographicsByParticipantID (into (hash-map) clinical-demographics) })
+  (def processed-data
+    {:files files-processed
+     :superatlas superatlas
+     :atlases atlases-processed
+     :biospecimenByBiospecimenID (into (hash-map) clinical-biospecimens-processed)
+     :diagnosisByParticipantID (into (hash-map) clinical-diagnosis)
+     :demographicsByParticipantID (into (hash-map) clinical-demographics) })
 
-(do
-  (json/generate-stream processed-data (io/writer "processed_syn_data.json") {:pretty true})
-  (println (str "Exported processed data to JSON!")))
+  (let [base-output (opts :output)]
+    (json/generate-stream processed-data (io/writer base-output) {:pretty true})
+    (when (not (opts :no-gz))
+      (gzip base-output (str base-output ".gz"))
+      (io/delete-file base-output))
+    (println "Done with export."))
+  )

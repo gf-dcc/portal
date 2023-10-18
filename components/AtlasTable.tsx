@@ -9,7 +9,7 @@ import { observer } from 'mobx-react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDownload } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { ExploreTab } from './ExploreTabs';
 import { Button, Modal } from 'react-bootstrap';
 import { ISelectedFiltersByAttrName } from '../lib/types';
@@ -90,28 +90,6 @@ const CBioPortalViewerLink = (props: { url: string; count: number }) => (
     </Tooltip>
 );
 
-const OtherAppViewerLink = (props: { url: string; count: number }) => (
-    <Tooltip overlay="Team-maintained app/viewer">
-        <a
-            href={props.url}
-            target="_blank"
-            style={{
-                paddingRight: 8,
-                fontFamily: 'monospace',
-                textDecoration: 'none',
-            }}
-        >
-            {props.count < 100 && '\u00A0'}
-            {props.count < 10 && '\u00A0'}
-            {props.count}{' '}
-            <img
-                width={25}
-                src={'data:image/svg+xml;base64,PHN2ZyBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLW1pdGVybGltaXQ9IjIiIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJtMTYuNDc2IDNjLjM2OSAwIC43MDkuMTk3Ljg4Ny41MTQuOSAxLjU5NSAzLjYzMyA2LjQ0NSA0LjUwOSA4LjAwMS4wNzUuMTMxLjExOC4yNzYuMTI2LjQyMy4wMTIuMTg3LS4wMjkuMzc3LS4xMjYuNTQ3LS44NzYgMS41NTYtMy42MDkgNi40MDYtNC41MDkgOC0uMTc4LjMxOC0uNTE4LjUxNS0uODg3LjUxNWgtOC45NTFjLS4zNjkgMC0uNzA5LS4xOTctLjg4Ny0uNTE1LS44OTktMS41OTQtMy42MzQtNi40NDQtNC41MS04LS4wODUtLjE1MS0uMTI4LS4zMTgtLjEyOC0uNDg1cy4wNDMtLjMzNC4xMjgtLjQ4NWMuODc2LTEuNTU2IDMuNjExLTYuNDA2IDQuNTEtOC4wMDEuMTc4LS4zMTcuNTE4LS41MTQuODg3LS41MTR6IiBmaWxsLXJ1bGU9Im5vbnplcm8iLz48L3N2Zz4='}
-            />
-        </a>
-    </Tooltip>
-);
-
 const CellxgeneViewerLink = (props: { url: string; count: number }) => (
     <Tooltip overlay="cellxgene">
         <a
@@ -162,6 +140,7 @@ const BroadSingleCellPortalViewerLink = (props: {
         </a>
     </Tooltip>
 );
+
 
 type AtlasTableData = AtlasX & { isSelected: boolean };
 
@@ -239,20 +218,30 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
             {
                 name: 'Status',
                 selector: (atlas: AtlasX) => atlas.status,
-                grow: 1.25,
+                grow: 1,
                 wrap: true,
                 sortable: true,
             },
+            // We don't have multiple publications per project yet
             {
-                name: 'Publication Link',
-                selector: (atlas: AtlasX) => atlas.publication,
-                grow: 1.25,
+                name: 'Publication',
+                selector: 'publication',
+                cell: (atlas: AtlasX) => (
+                    atlas.publication? <><a target="_blank" href={atlas.publication[0]}><FontAwesomeIcon icon={faBook} /></a></> : ''
+                ),
+                grow: 0.75,
                 wrap: true,
                 sortable: true,
             },
+            // TODO include names of datasets
             {
                 name: 'Dataset Accessions',
-                selector: (atlas: AtlasX) => atlas.datasets, // TODO render as links
+                selector: '',
+                cell: (atlas: AtlasX) => {
+                    return (
+                        <p>{atlas.datasets.map(d => (<a href={"https://www.synapse.org/#!Synapse:"+ d}>{d}, </a>))}</p>
+                    )
+                },
                 grow: 1.25,
                 wrap: true,
                 sortable: false,
@@ -332,15 +321,6 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                             <CBioPortalViewerLink
                                 url={
                                     'https://triage.cbioportal.mskcc.org/study/summary?id=brca_ellisen_2022'
-                                }
-                                count={1}
-                            />
-                        );
-                    } else if (atlas.atlas_id === 'syn51755920') {
-                        return (
-                            <OtherAppViewerLink
-                                url={
-                                    'https://kinase-library.phosphosite.org/'
                                 }
                                 count={1}
                             />

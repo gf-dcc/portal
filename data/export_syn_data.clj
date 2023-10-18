@@ -101,11 +101,11 @@
       (filter #(or (nil? (:BiospecimenID %)) (cset/subset? (set (json/parse-string (:BiospecimenID %))) biospecimens)))
       (map (fn [x]
              {:Component (or (:Component x) "NA")
-              :assayName (if (:Component x) (str/replace (:Component x) #"Level.?\d" "") "") ; derived
+              :assayName (if (:Component x) (str/replace (:Component x) #"_?Level.?\d" "") "") ; derived
               :projectId (:projectId x)
               :filename (x :name)
               :fileFormat (or (:FileFormat x) "NA")
-              :level (if (:Component x) (re-find #"Level.?\d" (:Component x)) "") ; derived
+              :level (if (:Component x) (str "Level " (re-find #"\d$" (:Component x))) "") ; derived
               :DataFileID (:id x)
               :dataset_id (:parentId x)
               :biospecimenIds (or (json/parse-string (:BiospecimenID x)) ["NA_Biospecimen"])

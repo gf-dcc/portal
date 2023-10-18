@@ -1,6 +1,7 @@
 (require '[babashka.cli :as cli])
 (require '[babashka.http-client :as http])
 (require '[cheshire.core :as json])
+(require '[clojure.string :as str])
 (require '[clojure.java.io :as io])
 (require '[clojure.set :as cset])
 (:import java.util.zip.GZIPInputStream
@@ -100,10 +101,11 @@
       (filter #(or (nil? (:BiospecimenID %)) (cset/subset? (set (json/parse-string (:BiospecimenID %))) biospecimens)))
       (map (fn [x]
              {:Component (or (:Component x) "NA")
+              :assayName (if (:Component x) (str/replace (:Component x) #"Level.?\d" "") "") ; derived
               :projectId (:projectId x)
               :filename (x :name)
               :fileFormat (or (:FileFormat x) "NA")
-              :level "Unknown" ; TODO derive this
+              :level (if (:Component x) (re-find #"Level.?\d" (:Component x)) "") ; derived
               :DataFileID (:id x)
               :dataset_id (:parentId x)
               :biospecimenIds (or (json/parse-string (:BiospecimenID x)) ["NA_Biospecimen"])

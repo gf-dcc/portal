@@ -239,7 +239,7 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                 selector: '',
                 cell: (atlas: AtlasX) => {
                     return (
-                        <p>{atlas.datasets.map(d => (<a href={"https://www.synapse.org/#!Synapse:"+ d}>{d}, </a>))}</p>
+                        <p>{atlas.datasets.map(d => (<a target="_blank" href={"https://www.synapse.org/#!Synapse:"+ d}>{d}, </a>))}</p>
                     )
                 },
                 grow: 1.25,

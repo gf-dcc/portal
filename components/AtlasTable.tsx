@@ -14,22 +14,21 @@ import { ExploreTab } from './ExploreTabs';
 import { Button, Modal } from 'react-bootstrap';
 import { ISelectedFiltersByAttrName } from '../lib/types';
 
-// Create a generic ViewerLink component
-const ViewerLink = (props: { url: string; tooltip: string }) => (
-  <Tooltip overlay={props.tooltip} placement="top">
-    <a
-      href={props.url}
-      target="_blank"
-      style={{
-        paddingRight: 8,
-        textDecoration: 'none',
-      }}
-    >
-      {props.children}
-    </a>
-  </Tooltip>
-);
-
+const ViewerLink = (props: { url: string; tooltip: string; children: React.ReactNode }) => (
+    <Tooltip overlay={props.tooltip} placement="top">
+      <a
+        href={props.url}
+        target="_blank"
+        style={{
+          paddingRight: 8,
+          textDecoration: 'none',
+        }}
+      >
+        {props.children}
+      </a>
+    </Tooltip>
+  );
+  
 // Create specific ViewerLink components
 const MinervaStoryViewerLink = (props: { url: string }) => (
   <ViewerLink url={props.url} tooltip="Minerva Story">

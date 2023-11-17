@@ -14,133 +14,77 @@ import { ExploreTab } from './ExploreTabs';
 import { Button, Modal } from 'react-bootstrap';
 import { ISelectedFiltersByAttrName } from '../lib/types';
 
-interface IAtlasTableProps {
-    router: NextRouter;
-    synapseAtlasData: AtlasX[];
-    selectedAtlases?: AtlasX[];
-    filteredAtlases?: AtlasX[];
-    onSelectAtlas?: (selected: AtlasX[]) => void;
-    selectedFiltersByAttrName: ISelectedFiltersByAttrName;
-    filteredCases: Entity[];
-    filteredBiospecimens: Entity[];
-}
-
-const MinervaStoryViewerLink = (props: { url: string; count: number }) => (
-    <Tooltip overlay="Minerva Story">
-        <a
-            href={props.url}
-            target="_blank"
-            style={{
-                paddingRight: 8,
-                fontFamily: 'monospace',
-                textDecoration: 'none',
-            }}
-        >
-            {props.count < 100 && '\u00A0'}
-            {props.count < 10 && '\u00A0'}
-            {props.count}{' '}
-            <img
-                width={20}
-                src="https://user-images.githubusercontent.com/1334004/156241219-a3062991-ba9d-4201-ad87-3c9c1f0c61d8.png"
-            />
-        </a>
-    </Tooltip>
+// Create a generic ViewerLink component
+const ViewerLink = (props: { url: string; tooltip: string }) => (
+  <Tooltip overlay={props.tooltip} placement="top">
+    <a
+      href={props.url}
+      target="_blank"
+      style={{
+        paddingRight: 8,
+        textDecoration: 'none',
+      }}
+    >
+      {props.children}
+    </a>
+  </Tooltip>
 );
 
-const AutoMinervaViewerLink = (props: { url: string; count: number }) => (
-    <Tooltip overlay="Autominerva">
-        <a
-            href={props.url}
-            style={{
-                paddingRight: 8,
-                fontFamily: 'monospace',
-                textDecoration: 'none',
-            }}
-        >
-            {props.count < 100 && '\u00A0'}
-            {props.count < 10 && '\u00A0'}
-            {props.count}{' '}
-            <img
-                width={20}
-                src="https://user-images.githubusercontent.com/1334004/159789346-b647c772-48fe-4652-8d2b-3eecf6690f1f.png"
-            />
-        </a>
-    </Tooltip>
+// Create specific ViewerLink components
+const MinervaStoryViewerLink = (props: { url: string }) => (
+  <ViewerLink url={props.url} tooltip="Minerva Story">
+    <div style={{ padding: '10px' }}>
+    <img
+      width={40}
+      src="https://user-images.githubusercontent.com/1334004/156241219-a3062991-ba9d-4201-ad87-3c9c1f0c61d8.png"
+    />
+    </div>
+  </ViewerLink>
 );
 
-const CBioPortalViewerLink = (props: { url: string; count: number }) => (
-    <Tooltip overlay="cBioPortal">
-        <a
-            href={props.url}
-            target="_blank"
-            style={{
-                paddingRight: 8,
-                fontFamily: 'monospace',
-                textDecoration: 'none',
-            }}
-        >
-            {props.count < 100 && '\u00A0'}
-            {props.count < 10 && '\u00A0'}
-            {props.count}{' '}
-            <img
-                width={20}
-                src={'https://avatars.githubusercontent.com/u/9876251?s=20&v=4'}
-            />
-        </a>
-    </Tooltip>
+const AutoMinervaViewerLink = (props: { url: string }) => (
+  <ViewerLink url={props.url} tooltip="Autominerva">
+    <img
+      width={40}
+      src="https://user-images.githubusercontent.com/1334004/159789346-b647c772-48fe-4652-8d2b-3eecf6690f1f.png"
+    />
+  </ViewerLink>
 );
 
-const CellxgeneViewerLink = (props: { url: string; count: number }) => (
-    <Tooltip overlay="cellxgene">
-        <a
-            href={props.url}
-            target="_blank"
-            style={{
-                paddingRight: 8,
-                fontFamily: 'monospace',
-                textDecoration: 'none',
-            }}
-        >
-            {props.count < 100 && '\u00A0'}
-            {props.count < 10 && '\u00A0'}
-            {props.count}{' '}
-            <img
-                width={20}
-                src={
-                    'https://pbs.twimg.com/profile_images/1285714433981812736/-wuBO62N_400x400.jpg'
-                }
-            />
-        </a>
-    </Tooltip>
+const CBioPortalViewerLink = (props: { url: string }) => (
+  <ViewerLink url={props.url} tooltip="cBioPortal">
+  <div style={{ padding: '30px' }}>
+    <img
+      width={50}
+      src={'https://docs.cbioportal.org/images/cbio-logo.png'}
+    />
+  </div>
+  </ViewerLink>
 );
 
-const BroadSingleCellPortalViewerLink = (props: {
-    url: string;
-    count: number;
-}) => (
-    <Tooltip overlay="Broad Single Cell Portal">
-        <a
-            href={props.url}
-            target="_blank"
-            style={{
-                paddingRight: 8,
-                fontFamily: 'monospace',
-                textDecoration: 'none',
-            }}
-        >
-            {props.count < 100 && '\u00A0'}
-            {props.count < 10 && '\u00A0'}
-            {props.count}{' '}
-            <img
-                width={20}
-                src={
-                    'https://user-images.githubusercontent.com/1334004/171445636-2458ddf6-ce48-4f1f-ab7d-d56487b34ef0.png'
-                }
-            />
-        </a>
-    </Tooltip>
+const CellxgeneViewerLink = (props: { url: string }) => (
+  <ViewerLink url={props.url} tooltip="cellxgene">
+      <div style={{ padding: '30px' }}>
+    <img
+      width={40}
+      src={
+        'https://pbs.twimg.com/profile_images/1285714433981812736/-wuBO62N_400x400.jpg'
+      }
+    />
+    </div>
+  </ViewerLink>
 );
 
+const BroadSingleCellPortalViewerLink = (props: { url: string }) => (
+  <ViewerLink url={props.url} tooltip="Broad Single Cell Portal">
+    <img
+      width={40}
+      src={
+        'https://user-images.githubusercontent.com/1334004/171445636-2458ddf6-ce48-4f1f-ab7d-d56487b34ef0.png'
+      }
+    />
+  </ViewerLink>
+);
 
 type AtlasTableData = AtlasX & { isSelected: boolean };
 
@@ -196,30 +140,32 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
     get columns() {
         return [
             {
-                name: 'Project Title',
-                selector: (atlas: AtlasX) => atlas.atlas_name,
-                grow: 1.25,
+                name: 'Project',
+                selector: (atlas: AtlasX) => (
+                    <a
+                        href={`https://synapse.org/#!Synapse:${atlas.atlas_id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        {atlas.atlas_name}
+                    </a>
+                ),
+                grow: 2,
                 wrap: true,
                 sortable: true,
             },
             {
-                name: 'Project ID',
-                selector: (atlas: AtlasX) => atlas.atlas_id,
-                wrap: true,
-                sortable: false,
-            },
-            {
-                name: 'Lead Research Teams',
+                name: 'Investigator',
                 selector: (atlas: AtlasX) => atlas.team_name,
                 grow: 1.25,
                 wrap: true,
                 sortable: true,
             },
             {
-                name: 'Status',
+                name: 'Project Status',
                 selector: (atlas: AtlasX) => atlas.status,
-                grow: 1,
-                wrap: true,
+                grow: 1.5,
+                wrap: false,
                 sortable: true,
             },
             // We don't have multiple publications per project yet
@@ -227,15 +173,15 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                 name: 'Publication',
                 selector: 'publication',
                 cell: (atlas: AtlasX) => (
-                    atlas.publication? <><a target="_blank" href={atlas.publication[0]}><FontAwesomeIcon icon={faBook} /></a></> : ''
+                    atlas.publication? <><a target="_blank" href={atlas.publication[0]}><FontAwesomeIcon icon={faBook} size="2x"/></a></> : ''
                 ),
-                grow: 0.75,
+                grow: 1,
                 wrap: true,
                 sortable: true,
             },
             // TODO include names of datasets
             {
-                name: 'Dataset Accessions',
+                name: 'Data Types',
                 selector: '',
                 cell: (atlas: AtlasX) => {
                     return (
@@ -247,7 +193,7 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                 sortable: false,
             },
             {
-                name: 'Cases',
+                name: 'Patients',
                 grow: 0.5,
                 selector: 'num_cases',
                 cell: (atlas: AtlasX) => (
@@ -267,26 +213,7 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                 sortable: true,
             },
             {
-                name: 'Biospecimens',
-                selector: 'num_biospecimens',
-                cell: (atlas: AtlasX) => (
-                    <span className="ml-auto">
-                        {this.shouldShowFilteredFractions
-                            ? `${
-                                  (
-                                      this.filteredBiospecimensByAtlas[
-                                          atlas.atlas_id
-                                      ] || []
-                                  ).length
-                              }/`
-                            : ''}
-                        {atlas.num_biospecimens}
-                    </span>
-                ),
-                sortable: true,
-            },
-            {
-                name: 'Viewers',
+                name: 'External Tools',
                 selector: 'atlas_id', // dummy selector - you need to put something or else nothing will render
                 grow: 1.5,
                 cell: (atlas: AtlasX) => {
@@ -297,13 +224,11 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                                     url={
                                         'https://cellxgene.cziscience.com/collections/99f1515b-46a2-4bc4-94c3-f62659dc1eb4'
                                     }
-                                    count={1}
                                 />
                                 <BroadSingleCellPortalViewerLink
                                     url={
                                         'https://singlecell.broadinstitute.org/single_cell/study/SCP1731/'
                                     }
-                                    count={1}
                                 />
                             </>
                         );
@@ -313,7 +238,6 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                                 url={
                                     'https://triage.cbioportal.mskcc.org/study/summary?id=ovarian_drapkin_2022'
                                 }
-                                count={1}
                             />
                         );
                     } else if (atlas.atlas_id === 'syn52047509') {
@@ -322,7 +246,6 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                                 url={
                                     'https://triage.cbioportal.mskcc.org/study/summary?id=brca_ellisen_2022'
                                 }
-                                count={1}
                             />
                         );
                     } else {

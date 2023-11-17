@@ -25,8 +25,8 @@ const PortalNavbar = () => (
         <Navbar.Brand href="/">
             <img
                 src="/gray_logo.png"
-                className={'htanlogo'}
-                alt="HTAN Data Portal"
+                className={'graylogo'}
+                alt="Gray Foundation Data Portal"
             />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

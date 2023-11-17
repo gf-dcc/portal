@@ -390,17 +390,6 @@ export default class FileTable extends React.Component<IFileTableProps> {
                 sortable: true,
             },
             {
-                name: 'Organ',
-                selector: (file: Entity) => {
-                    return _.uniq(
-                        file.diagnosis.map((d) => d.TissueorOrganofOrigin)
-                    ).join(', ');
-                },
-                cell: truncatedTableCell,
-                wrap: true,
-                sortable: true,
-            },
-            {
                 name: 'Diagnosis',
                 selector: (file: Entity) => {
                     return _.uniq(

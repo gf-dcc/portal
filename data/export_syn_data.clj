@@ -244,8 +244,8 @@
   (println (str "File cases are a subset of all cases: " (cset/subset? file-cases all-cases)))
 
   (def placeholder_P
-    {:NA_Participant {:Component "Demographics" :ParticipantID "NA_Participant"
-                      :Race "NA" :Ethnicity "NA" :atlas_id "" :atlas_name ""}})
+    {:NA_Participant {:Component "Demographics" :ParticipantID "NA"
+                      :Gender "NA" :Race "NA" :Ethnicity "NA" :atlas_id "" :atlas_name ""}})
 
   (def clinical-demographics (conj (transform-demographics clinical-participants) placeholder_P))
 

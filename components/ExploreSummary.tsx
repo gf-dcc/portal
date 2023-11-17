@@ -21,10 +21,6 @@ export const ExploreSummary: React.FunctionComponent<IExploreSummaryProps> = (
         props.getGroupsByPropertyFiltered[AttributeNames.AtlasName]
     ).length;
 
-    const organCount = _.keys(
-        props.getGroupsByPropertyFiltered[AttributeNames.TissueorOrganofOrigin]
-    ).length;
-
     const cancerTypeCount = _.keys(
         props.getGroupsByPropertyFiltered[AttributeNames.PrimaryDiagnosis]
     ).length;
@@ -43,9 +39,7 @@ export const ExploreSummary: React.FunctionComponent<IExploreSummaryProps> = (
                 </div>
 
                 <div>{pluralize('Team', atlasCount, true)}</div>
-                <div>{pluralize('Organ', organCount, true)}</div>
-                <div>{pluralize('Cancer Type', cancerTypeCount, true)}</div>
-                <div>{pluralize('Case', props.filteredCaseCount, true)}</div>
+                <div>{pluralize('Patient', props.filteredCaseCount, true)}</div>
                 <div>
                 {props.filteredBiospecimenCount === 1
                     ? 'Biospecimen'

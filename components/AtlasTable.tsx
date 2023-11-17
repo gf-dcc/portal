@@ -14,6 +14,17 @@ import { ExploreTab } from './ExploreTabs';
 import { Button, Modal } from 'react-bootstrap';
 import { ISelectedFiltersByAttrName } from '../lib/types';
 
+interface IAtlasTableProps {
+    router: NextRouter;
+    synapseAtlasData: AtlasX[];
+    selectedAtlases?: AtlasX[];
+    filteredAtlases?: AtlasX[];
+    onSelectAtlas?: (selected: AtlasX[]) => void;
+    selectedFiltersByAttrName: ISelectedFiltersByAttrName;
+    filteredCases: Entity[];
+    filteredBiospecimens: Entity[];
+}
+
 const ViewerLink = (props: { url: string; tooltip: string; children: React.ReactNode }) => (
     <Tooltip overlay={props.tooltip} placement="top">
       <a

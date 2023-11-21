@@ -630,7 +630,7 @@ export default class FileTable extends React.Component<IFileTableProps> {
         };
 
         const listSelectors: any = {
-            HTANParentDataFileID: {
+            ParentDataFileID: {
                 pluralName: 'Files',
             },
         };

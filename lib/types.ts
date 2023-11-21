@@ -18,12 +18,10 @@ export type ExploreSelectedFilter = {
 
 export enum AttributeNames {
     // Synapse attribute names
-    TissueorOrganofOrigin = 'TissueorOrganofOrigin',
     PrimaryDiagnosis = 'PrimaryDiagnosis',
-    Gender = 'Gender',
+    Sex = 'Sex',
     Race = 'Race',
     Ethnicity = 'Ethnicity',
-    CountryofResidence = 'CountryofResidence',
     Component = 'Component',
     Biospecimen = 'Biospecimen',
     AtlasName = 'AtlasName',
@@ -53,11 +51,7 @@ function getCaseValues(propName: keyof Entity) {
 }
 
 export const AttributeMap: { [attr in AttributeNames]: IAttributeInfo } = {
-    [AttributeNames.TissueorOrganofOrigin]: {
-        getValues: getCaseValues('TissueorOrganofOrigin'),
-        displayName: 'Organ',
-        caseFilter: true,
-    },
+    
     [AttributeNames.PrimaryDiagnosis]: {
         getValues: getCaseValues('PrimaryDiagnosis'),
         displayName: 'Disease Type',
@@ -73,14 +67,9 @@ export const AttributeMap: { [attr in AttributeNames]: IAttributeInfo } = {
         displayName: 'Ethnicity',
         caseFilter: true,
     },
-    [AttributeNames.CountryofResidence]: {
-        getValues: getCaseValues('CountryofResidence'),
-        displayName: 'Country of Residence',
-        caseFilter: true,
-    },
-    [AttributeNames.Gender]: {
-        getValues: getCaseValues('Gender'),
-        displayName: 'Gender',
+    [AttributeNames.Sex]: {
+        getValues: getCaseValues('Sex'),
+        displayName: 'Sex',
         caseFilter: true,
     },
     [AttributeNames.Component]: {

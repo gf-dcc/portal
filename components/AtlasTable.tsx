@@ -297,13 +297,11 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                                     url={
                                         'https://cellxgene.cziscience.com/collections/99f1515b-46a2-4bc4-94c3-f62659dc1eb4'
                                     }
-                                    count={1}
                                 />
                                 <BroadSingleCellPortalViewerLink
                                     url={
                                         'https://singlecell.broadinstitute.org/single_cell/study/SCP1731/'
                                     }
-                                    count={1}
                                 />
                             </>
                         );
@@ -313,7 +311,6 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                                 url={
                                     'https://triage.cbioportal.mskcc.org/study/summary?id=ovarian_drapkin_2022'
                                 }
-                                count={1}
                             />
                         );
                     } else if (atlas.atlas_id === 'syn52047509') {
@@ -322,7 +319,6 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                                 url={
                                     'https://triage.cbioportal.mskcc.org/study/summary?id=brca_ellisen_2022'
                                 }
-                                count={1}
                             />
                         );
                     } else {

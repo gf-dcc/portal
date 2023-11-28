@@ -37,8 +37,7 @@ export interface BaseSerializableEntity {
     BiospecimenID: string;
     DataFileID: DataFileID; // this is used as the stable UID
     ParentBiospecimenID: string;
-    HTANParentDataFileID: string;
-    TissueorOrganofOrigin: string;
+    ParentDataFileID: string;
     PrimaryDiagnosis: string;
     AgeatDiagnosis: number;
     fileFormat: string;
@@ -48,8 +47,7 @@ export interface BaseSerializableEntity {
     AssayType?: string;
     Race: string;
     Ethnicity: string;
-    CountryofResidence: string;
-    Gender: string;
+    Sex: string;
 
     // Derived or attached in frontend
     atlas_id: string;

@@ -153,6 +153,7 @@
            {:ParticipantID (:ParticipantID x)
             :Race (or (:Race x) "NA")
             :Ethnicity (or (:Ethnicity x) "NA")
+            :Sex (or (:Sex x) "NA")
             :atlas_id (:inAtlas x)}}) data))
 
 (defn transform-diagnosis [data]
@@ -245,7 +246,7 @@
 
   (def placeholder_P
     {:NA_Participant {:Component "Demographics" :ParticipantID "NA_Participant"
-                      :Race "NA" :Ethnicity "NA" :atlas_id "" :atlas_name ""}})
+                      :Race "NA" :Ethnicity "NA" :Sex "NA" :atlas_id "" :atlas_name ""}})
 
   (def clinical-demographics (conj (transform-demographics clinical-participants) placeholder_P))
 

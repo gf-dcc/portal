@@ -390,21 +390,10 @@ export default class FileTable extends React.Component<IFileTableProps> {
                 sortable: true,
             },
             {
-                name: 'Organ',
-                selector: (file: Entity) => {
-                    return _.uniq(
-                        file.diagnosis.map((d) => d.TissueorOrganofOrigin)
-                    ).join(', ');
-                },
-                cell: truncatedTableCell,
-                wrap: true,
-                sortable: true,
-            },
-            {
                 name: 'Diagnosis',
                 selector: (file: Entity) => {
                     return _.uniq(
-                        file.diagnosis.map((d) => d.TissueorOrganofOrigin)
+                        file.diagnosis.map((d) => d.PrimaryDiagnosis) // this should probably be repurposed to "Breast Cancer Risk Group" & "Ovarian Cancer Risk Group" unless we get more cancer patients
                     ).join(', ');
                 },
                 cell: truncatedTableCell,
@@ -630,7 +619,7 @@ export default class FileTable extends React.Component<IFileTableProps> {
         };
 
         const listSelectors: any = {
-            HTANParentDataFileID: {
+            ParentDataFileID: {
                 pluralName: 'Files',
             },
         };

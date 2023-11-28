@@ -81,7 +81,7 @@ const CBioPortalViewerLink = (props: { url: string}) => (
     </Tooltip>
 );
 
-const CellxgeneViewerLink = (props: { url: string) => (
+const CellxgeneViewerLink = (props: { url: string}) => (
     <Tooltip overlay="cellxgene">
         <a
             href={props.url}

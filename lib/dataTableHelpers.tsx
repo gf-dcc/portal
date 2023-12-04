@@ -104,7 +104,7 @@ function defaultNumericalComparison(
     return comparison;
 }
 
-function getDefaultHtanIdIteratees(getValue: (row: Entity) => string) {
+function getDefaultIdIteratees(getValue: (row: Entity) => string) {
     // get iteratees for ids which take the form HTA[integer]_[integer]
     return [
         (row: Entity) => Number(getValue(row).split('_')[0].replace('HTA', '')),
@@ -112,22 +112,22 @@ function getDefaultHtanIdIteratees(getValue: (row: Entity) => string) {
     ];
 }
 
-export function sortByHtanParticipantId(rowA: Entity, rowB: Entity) {
+export function sortByParticipantId(rowA: Entity, rowB: Entity) {
     // we need sort by participant id which takes the form HTA[integer]_[integer]
-    const iteratees = getDefaultHtanIdIteratees((row) => row.ParticipantID);
+    const iteratees = getDefaultIdIteratees((row) => row.ParticipantID);
     return defaultNumericalComparison(rowA, rowB, iteratees);
 }
 
-export function sortByHtanParentId(rowA: Entity, rowB: Entity) {
+export function sortByParentId(rowA: Entity, rowB: Entity) {
     // TODO parent id potentially can also take the form HTA[integer]_[integer]_[integer]
     // we need sort by parent id which takes the form HTA[integer]_[integer]
-    const iteratees = getDefaultHtanIdIteratees((row) => row.ParentID);
+    const iteratees = getDefaultIdIteratees((row) => row.ParentID);
     return defaultNumericalComparison(rowA, rowB, iteratees);
 }
 
 export function sortByBiospecimenId(rowA: Entity, rowB: Entity) {
     // we need sort by biospecimen id which takes the form HTA[integer]_[integer]_[integer]
-    const iteratees = getDefaultHtanIdIteratees((row) => row.BiospecimenID);
+    const iteratees = getDefaultIdIteratees((row) => row.BiospecimenID);
     // additional iteratee for the last integer
     iteratees.push((row: Entity) =>
         Number(row.BiospecimenID.split('_')[2])

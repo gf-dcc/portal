@@ -6,7 +6,7 @@ import {
     getAtlasColumn,
     getDefaultDataTableStyle,
     sortByBiospecimenId,
-    sortByHtanParentId,
+    sortByParentId,
 } from '../lib/dataTableHelpers';
 import { AtlasX, Entity } from '../lib/helpers';
 import EnhancedDataTable from './EnhancedDataTable';
@@ -29,7 +29,7 @@ export const BiospecimenTable: React.FunctionComponent<IBiospecimenTableProps> =
                 sortFunction: sortByBiospecimenId,
             },
             ParentID: {
-                sortFunction: sortByHtanParentId,
+                sortFunction: sortByParentId,
             },
         },
         // Component seems to be always "Biospecimen", no need to have a column for it

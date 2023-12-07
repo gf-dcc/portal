@@ -5,7 +5,7 @@ import {
     generateColumnsForDataSchema,
     getAtlasColumn,
     getDefaultDataTableStyle,
-    sortByHtanParticipantId,
+    sortByParticipantId,
 } from '../lib/dataTableHelpers';
 import { AtlasX, convertAgeInDaysToYears, Entity } from '../lib/helpers';
 import EnhancedDataTable from './EnhancedDataTable';
@@ -23,7 +23,7 @@ export const CaseTable: React.FunctionComponent<ICaseTableProps> = (props) => {
         // need to add a custom sort function for the id
         {
             ParticipantID: {
-                sortFunction: sortByHtanParticipantId,
+                sortFunction: sortByParticipantId,
             },
             AgeatDiagnosis: {
                 // we need to customize both the name and the tooltip since we convert days to years
@@ -42,13 +42,13 @@ export const CaseTable: React.FunctionComponent<ICaseTableProps> = (props) => {
         // Component seems to be always "Diagnosis", no need to have a column for it
         ['Component']
     );
-    const indexOfHtanParticipantId = _.findIndex(
+    const indexOfParticipantId = _.findIndex(
         columns,
-        (c) => c.id === 'HTAN Participant ID'
+        (c) => c.id === 'Participant ID'
     );
-    // insert Atlas Name right after HTAN Participant ID
+    // insert Atlas Name right after Participant ID
     columns.splice(
-        indexOfHtanParticipantId + 1,
+        indexOfParticipantId + 1,
         0,
         getAtlasColumn(props.synapseAtlases)
     );

@@ -123,7 +123,7 @@ export function doesFileIncludeLevel1OrLevel2SequencingData(file: Entity) {
 
 function mergeCaseData(
     diagnosis: Entity[],
-    demographicsByParticipantID: { [htanParticipantID: string]: Entity }
+    demographicsByParticipantID: { [ParticipantID: string]: Entity }
 ) {
     return diagnosis.map((d) => ({
         ...d,

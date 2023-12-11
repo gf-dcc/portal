@@ -25,7 +25,7 @@ interface IAtlasTableProps {
     filteredBiospecimens: Entity[];
 }
 
-const MinervaStoryViewerLink = (props: { url: string; count: number }) => (
+const MinervaStoryViewerLink = (props: { url: string}) => (
     <Tooltip overlay="Minerva Story">
         <a
             href={props.url}
@@ -36,9 +36,6 @@ const MinervaStoryViewerLink = (props: { url: string; count: number }) => (
                 textDecoration: 'none',
             }}
         >
-            {props.count < 100 && '\u00A0'}
-            {props.count < 10 && '\u00A0'}
-            {props.count}{' '}
             <img
                 width={20}
                 src="https://user-images.githubusercontent.com/1334004/156241219-a3062991-ba9d-4201-ad87-3c9c1f0c61d8.png"
@@ -47,7 +44,7 @@ const MinervaStoryViewerLink = (props: { url: string; count: number }) => (
     </Tooltip>
 );
 
-const AutoMinervaViewerLink = (props: { url: string; count: number }) => (
+const AutoMinervaViewerLink = (props: { url: string}) => (
     <Tooltip overlay="Autominerva">
         <a
             href={props.url}
@@ -57,9 +54,6 @@ const AutoMinervaViewerLink = (props: { url: string; count: number }) => (
                 textDecoration: 'none',
             }}
         >
-            {props.count < 100 && '\u00A0'}
-            {props.count < 10 && '\u00A0'}
-            {props.count}{' '}
             <img
                 width={20}
                 src="https://user-images.githubusercontent.com/1334004/159789346-b647c772-48fe-4652-8d2b-3eecf6690f1f.png"
@@ -68,7 +62,7 @@ const AutoMinervaViewerLink = (props: { url: string; count: number }) => (
     </Tooltip>
 );
 
-const CBioPortalViewerLink = (props: { url: string; count: number }) => (
+const CBioPortalViewerLink = (props: { url: string}) => (
     <Tooltip overlay="cBioPortal">
         <a
             href={props.url}
@@ -79,9 +73,6 @@ const CBioPortalViewerLink = (props: { url: string; count: number }) => (
                 textDecoration: 'none',
             }}
         >
-            {props.count < 100 && '\u00A0'}
-            {props.count < 10 && '\u00A0'}
-            {props.count}{' '}
             <img
                 width={20}
                 src={'https://avatars.githubusercontent.com/u/9876251?s=20&v=4'}
@@ -90,7 +81,7 @@ const CBioPortalViewerLink = (props: { url: string; count: number }) => (
     </Tooltip>
 );
 
-const CellxgeneViewerLink = (props: { url: string; count: number }) => (
+const CellxgeneViewerLink = (props: { url: string}) => (
     <Tooltip overlay="cellxgene">
         <a
             href={props.url}
@@ -101,9 +92,6 @@ const CellxgeneViewerLink = (props: { url: string; count: number }) => (
                 textDecoration: 'none',
             }}
         >
-            {props.count < 100 && '\u00A0'}
-            {props.count < 10 && '\u00A0'}
-            {props.count}{' '}
             <img
                 width={20}
                 src={
@@ -115,9 +103,7 @@ const CellxgeneViewerLink = (props: { url: string; count: number }) => (
 );
 
 const BroadSingleCellPortalViewerLink = (props: {
-    url: string;
-    count: number;
-}) => (
+    url: string}) => (
     <Tooltip overlay="Broad Single Cell Portal">
         <a
             href={props.url}
@@ -128,9 +114,6 @@ const BroadSingleCellPortalViewerLink = (props: {
                 textDecoration: 'none',
             }}
         >
-            {props.count < 100 && '\u00A0'}
-            {props.count < 10 && '\u00A0'}
-            {props.count}{' '}
             <img
                 width={20}
                 src={
@@ -297,13 +280,11 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                                     url={
                                         'https://cellxgene.cziscience.com/collections/99f1515b-46a2-4bc4-94c3-f62659dc1eb4'
                                     }
-                                    count={1}
                                 />
                                 <BroadSingleCellPortalViewerLink
                                     url={
                                         'https://singlecell.broadinstitute.org/single_cell/study/SCP1731/'
                                     }
-                                    count={1}
                                 />
                             </>
                         );
@@ -313,7 +294,6 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                                 url={
                                     'https://triage.cbioportal.mskcc.org/study/summary?id=ovarian_drapkin_2022'
                                 }
-                                count={1}
                             />
                         );
                     } else if (atlas.atlas_id === 'syn52047509') {
@@ -322,7 +302,6 @@ export default class AtlasTable extends React.Component<IAtlasTableProps> {
                                 url={
                                     'https://triage.cbioportal.mskcc.org/study/summary?id=brca_ellisen_2022'
                                 }
-                                count={1}
                             />
                         );
                     } else {

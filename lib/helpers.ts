@@ -35,7 +35,6 @@ export interface BaseSerializableEntity {
     Component: string;
     ParentID: string;
     BiospecimenID: string;
-    synapseId: string; // this is used as the stable UID
     ParentBiospecimenID: string;
     ParentDataFileID: string;
     PrimaryDiagnosis: string;

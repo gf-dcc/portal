@@ -54,7 +54,7 @@ export interface BaseSerializableEntity {
     dataset_id: string;
     level: string;
     assayName?: string;
-    primaryParents?: synapseId[];
+    primaryParents?: SynapseId[];
     synapseId?: SynapseId;
 }
 

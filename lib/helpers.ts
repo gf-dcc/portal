@@ -24,7 +24,7 @@ if (typeof window !== 'undefined') {
     win = {} as any;
 }
 
-export type synapseId = string;
+export type SynapseId = string;
 export type BiospecimenID = string;
 export type ParticipantID = string;
 

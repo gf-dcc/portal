@@ -106,7 +106,7 @@
               :filename (x :name)
               :fileFormat (or (:FileFormat x) "NA")
               :level (if (:Component x) (str "Level " (re-find #"\d$" (:Component x))) "") ; derived
-              :DataFileID (:id x)
+              :synapseId (:id x)
               :dataset_id (:parentId x)
               :biospecimenIds (or (json/parse-string (:BiospecimenID x)) ["NA_Biospecimen"])
               :diagnosisIds (or (json/parse-string (:ParticipantID x)) ["NA_Participant"])

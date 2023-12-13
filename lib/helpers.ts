@@ -24,7 +24,7 @@ if (typeof window !== 'undefined') {
     win = {} as any;
 }
 
-export type DataFileID = string;
+export type SynapseId = string;
 export type BiospecimenID = string;
 export type ParticipantID = string;
 
@@ -35,7 +35,6 @@ export interface BaseSerializableEntity {
     Component: string;
     ParentID: string;
     BiospecimenID: string;
-    DataFileID: DataFileID; // this is used as the stable UID
     ParentBiospecimenID: string;
     ParentDataFileID: string;
     PrimaryDiagnosis: string;
@@ -55,8 +54,8 @@ export interface BaseSerializableEntity {
     dataset_id: string;
     level: string;
     assayName?: string;
-    primaryParents?: DataFileID[];
-    synapseId?: string;
+    primaryParents?: SynapseId[];
+    synapseId?: SynapseId;
 }
 
 export interface SerializableEntity extends BaseSerializableEntity {

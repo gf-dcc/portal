@@ -55,7 +55,7 @@ export interface BaseSerializableEntity {
     level: string;
     assayName?: string;
     primaryParents?: synapseId[];
-    synapseId?: string;
+    synapseId?: SynapseId;
 }
 
 export interface SerializableEntity extends BaseSerializableEntity {
